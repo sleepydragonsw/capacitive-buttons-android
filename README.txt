@@ -26,3 +26,11 @@ this program in a file named LICENSE.txt; if not, see
 http://www.gnu.org/licenses
 
 ===============================================================================
+3. LICENSE
+
+RootTools - This application uses the RootTools library in order to run
+commands as the root user.  RootTools is open-source and is available under
+either the Apache V2.0 or GNU GPL v2 license (as of Sept 29, 2012). For details
+about this library, see its home page at http://code.google.com/p/roottools.  
+
+===============================================================================
