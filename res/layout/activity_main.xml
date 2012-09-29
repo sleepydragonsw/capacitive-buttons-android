@@ -13,21 +13,21 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:text="Off" />
+        android:text="@string/btn_off" />
     
     <Button
         android:id="@+id/btnDim"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:text="Dim" />
+        android:text="@string/btn_dim" />
 
     <Button
         android:id="@+id/btnBright"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:text="Bright" />
+        android:text="@string/btn_bright" />
 
     </LinearLayout>
 
