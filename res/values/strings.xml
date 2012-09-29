@@ -1,8 +1,10 @@
 <resources>
 
     <string name="app_name">HTC One X Capacitive Button Brightness</string>
-    <string name="hello_world">Hello world!</string>
-    <string name="menu_settings">Settings</string>
     <string name="title_activity_main">MainActivity</string>
+    <string name="btn_off">Off</string>
+    <string name="btn_dim">Dim</string>
+    <string name="btn_bright">Bright</string>
+    <string name="menu_settings">Settings</string>
 
 </resources>
