@@ -34,3 +34,13 @@ either the Apache V2.0 or GNU GPL v2 license (as of Sept 29, 2012). For details
 about this library, see its home page at http://code.google.com/p/roottools.  
 
 ===============================================================================
+4. CREDITS
+
+The logic to set the brightness of the capacitive buttons was copied from the
+"[MOD] Dim/Turn Off/Default Capacitive Buttons - Any firmware version" thread
+at http://forum.xda-developers.com/showthread.php?t=1694375 by Turge.  As of
+the time of writing (Sept 29, 2012) permission has not yet been requested from
+Turge to use the work from this thread; however, it will be privately requested
+prior to official release of this application.
+
+===============================================================================
