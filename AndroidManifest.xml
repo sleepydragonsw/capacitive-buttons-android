@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="org.sleepydragon.capbutnbrightness"
     android:versionCode="1"
-    android:versionName="1.0" >
+    android:versionName="@string/app_version" >
 
     <uses-sdk
         android:minSdkVersion="14"
@@ -16,9 +16,12 @@
             android:label="@string/title_activity_main" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name=".AboutActivity"
+            android:label="@string/title_activity_about" >
         </activity>
     </application>
 

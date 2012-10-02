@@ -18,9 +18,11 @@ package org.sleepydragon.capbutnbrightness;
 
 import android.os.Bundle;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Intent;
 
 public class MainActivity extends Activity implements View.OnClickListener {
 
@@ -82,4 +84,16 @@ public class MainActivity extends Activity implements View.OnClickListener {
         return true;
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        final int id = item.getItemId();
+        switch (id) {
+            case R.id.menu_about:
+                final Intent intent = new Intent(this, AboutActivity.class);
+                this.startActivity(intent);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
 }
