@@ -1,4 +1,4 @@
-HTC One X Capacitive Button Brightness
+Capacitive Button Brightness
 By: Denver Coneybeare <denver@sleepydragon.org>
 Sept 29, 2012
 
@@ -6,8 +6,8 @@ Sept 29, 2012
 1. INTRODUCTION
 
 This application simply allows the user to set the brightness of the capacitive
-buttons (the back, home, and recent tasks buttons) on the HTC One X.  Root is
-required in order for this application to work.
+buttons (the back, home, and recent tasks buttons), specifically for the HTC One
+X.  Root is required in order for this application to work.
 
 ===============================================================================
 2. LICENSE
