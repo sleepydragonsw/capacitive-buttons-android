@@ -17,6 +17,7 @@
 package org.sleepydragon.capbutnbrightness;
 
 import android.os.Bundle;
+import android.view.Menu;
 import android.view.View;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -74,4 +75,11 @@ public class MainActivity extends Activity implements View.OnClickListener {
                 return null;
         }
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.activity_main, menu);
+        return true;
+    }
+
 }
