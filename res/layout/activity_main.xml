@@ -8,26 +8,26 @@
         android:layout_height="match_parent"
         android:orientation="vertical" >
 
-    <Button
+    <ImageView
         android:id="@+id/btnOff"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:text="@string/btn_off" />
-    
-    <Button
+        android:src="@drawable/brightness_off" />
+
+    <ImageView
         android:id="@+id/btnDim"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:text="@string/btn_dim" />
+        android:src="@drawable/brightness_dim" />
 
-    <Button
+    <ImageView
         android:id="@+id/btnBright"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:text="@string/btn_bright" />
+        android:src="@drawable/brightness_bright" />
 
     </LinearLayout>
 
