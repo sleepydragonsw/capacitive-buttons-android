@@ -26,6 +26,8 @@ import android.content.Intent;
 
 public class MainActivity extends Activity implements View.OnClickListener {
 
+    private Settings settings;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,6 +39,8 @@ public class MainActivity extends Activity implements View.OnClickListener {
         btnOff.setOnClickListener(this);
         btnDim.setOnClickListener(this);
         btnBright.setOnClickListener(this);
+
+        this.settings = new Settings(this);
     }
 
     public void onClick(View view) {
@@ -44,6 +48,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
         if (level != null) {
             try {
                 CapButtonBrightness.set(level);
+                this.settings.setLevel(level);
             } catch (InterruptedException e) {
                 // odd... ignore it I guess??
             } catch (SetCapButtonBrightnessException e) {
