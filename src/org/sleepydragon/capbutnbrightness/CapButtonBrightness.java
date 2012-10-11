@@ -19,6 +19,8 @@ package org.sleepydragon.capbutnbrightness;
 import java.io.IOException;
 import java.util.concurrent.TimeoutException;
 
+import android.util.Log;
+
 import com.stericson.RootTools.Command;
 import com.stericson.RootTools.RootTools;
 import com.stericson.RootTools.Shell;
@@ -55,9 +57,17 @@ public class CapButtonBrightness {
      * @throws SetCapButtonBrightnessException if an error occurs.
      * @throws InterruptedException if waiting for the command to complete is
      * interrupted.
+     * @throws NullPointerException if level==null
      */
     public static void set(Level level) throws SetCapButtonBrightnessException,
             InterruptedException {
+        if (level == null) {
+            throw new NullPointerException("level==null");
+        }
+
+        Log.i(Constants.LOG_TAG, "Setting capacitive button brightness to "
+            + level.name());
+
         final int current = getCurrent(level);
         final String commandStr = getSetBrightnessCommand(current);
         final Shell shell;

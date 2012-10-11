@@ -24,10 +24,11 @@ import android.content.SharedPreferences;
  */
 public class Settings {
 
+    public static final String PREFS_NAME = "CapButtonBrightness";
+
     private static final String LEVEL_OFF = "off";
     private static final String LEVEL_DIM = "dim";
     private static final String LEVEL_BRIGHT = "bright";
-    private static final String PREFS_NAME = "CapButtonBrightness";
     private static final int PREFS_MODE = Context.MODE_MULTI_PROCESS;
     private static final String PREFS_KEY_BRIGHTNESS_LEVEL = "level";
     private static final String PREFS_KEY_SET_BRIGHTNESS_ON_BOOT =

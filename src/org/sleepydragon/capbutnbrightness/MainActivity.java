@@ -94,11 +94,14 @@ public class MainActivity extends Activity implements View.OnClickListener {
         final int id = item.getItemId();
         switch (id) {
             case R.id.menu_about:
-                final Intent intent = new Intent(this, AboutActivity.class);
-                this.startActivity(intent);
+                this.startActivity(new Intent(this, AboutActivity.class));
+                return true;
+            case R.id.menu_settings:
+                this.startActivity(new Intent(this, SettingsActivity.class));
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
+
 }

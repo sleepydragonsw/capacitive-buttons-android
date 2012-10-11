@@ -21,14 +21,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".AboutActivity"
-            android:label="@string/title_activity_about" >
-        </activity>
+        <activity android:name=".AboutActivity" />
+        <activity android:name=".SettingsActivity" />
 
-        <receiver
-            android:name=".SetCapButtonBrightnessBroadcastReceiver"
-            android:enabled="true" >
+        <receiver android:name=".SetCapButtonBrightnessBroadcastReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
