@@ -68,25 +68,39 @@ public class CapButtonBrightness {
         Log.i(Constants.LOG_TAG, "Setting capacitive button brightness to "
             + level.name());
 
+        if (!RootTools.isRootAvailable()) {
+            throw new SetCapButtonBrightnessException(
+                SetCapButtonBrightnessException.ErrorId.SU_BINARY_MISSING,
+                "device is not rooted", null);
+        } else if (!RootTools.isAccessGiven()) {
+            throw new SetCapButtonBrightnessException(
+                SetCapButtonBrightnessException.ErrorId.ROOT_ACCESS_DENIED,
+                "root access denied", null);
+        }
+
         final int current = getCurrent(level);
         final String commandStr = getSetBrightnessCommand(current);
         final Shell shell;
         try {
             shell = RootTools.getShell(true);
         } catch (TimeoutException e) {
-            throw new SetCapButtonBrightnessException("unable to get root "
-                + "shell: timeout expired: " + e.getMessage(), e);
+            throw new SetCapButtonBrightnessException(
+                SetCapButtonBrightnessException.ErrorId.ROOT_ACCESS_TIMEOUT,
+                "unable to get root shell: timeout expired: " + e.getMessage(),
+                e);
         } catch (IOException e) {
-            throw new SetCapButtonBrightnessException("unable to get root "
-                + "shell: IO error: " + e.getMessage(), e);
+            throw new SetCapButtonBrightnessException(
+                SetCapButtonBrightnessException.ErrorId.ROOT_ACCESS_IOEXCEPTION,
+                "unable to get root shell: IO error: " + e.getMessage(), e);
         }
 
         final Command command = new CommandNoCapture(1, commandStr);
         try {
             shell.add(command);
         } catch (IOException e) {
-            throw new SetCapButtonBrightnessException("running command as "
-                + "root failed: " + e.getMessage(), e);
+            throw new SetCapButtonBrightnessException(
+                SetCapButtonBrightnessException.ErrorId.ROOT_ACCESS_IOEXCEPTION,
+                "running command as root failed: " + e.getMessage(), e);
         }
 
         command.waitForFinish();

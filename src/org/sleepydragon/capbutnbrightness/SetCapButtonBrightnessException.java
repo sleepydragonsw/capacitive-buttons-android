@@ -20,8 +20,45 @@ package org.sleepydragon.capbutnbrightness;
  * Thrown if setting the capacitive button brightness fails.
  */
 public class SetCapButtonBrightnessException extends Exception {
+
     private static final long serialVersionUID = -3591539697444796075L;
-    public SetCapButtonBrightnessException(String message, Throwable cause) {
-        super(message, cause);
+
+    public enum ErrorId {
+
+        /**
+         * Error indicating that the "su" binary is missing, and therefore that
+         * the device is not rooted.
+         */
+        SU_BINARY_MISSING,
+
+        /**
+         * Error indicating that the request for root permissions was denied.
+         */
+        ROOT_ACCESS_DENIED,
+
+        /**
+         * Error indicating that a timeout occurred waiting for root permissions
+         * to be granted or the command to finish.
+         */
+        ROOT_ACCESS_TIMEOUT,
+
+        /**
+         * Error indicating that an IOException occurred while running the
+         * command as root.
+         */
+        ROOT_ACCESS_IOEXCEPTION,
     }
+
+    private final ErrorId errorId;
+
+    public SetCapButtonBrightnessException(ErrorId errorId, String message,
+            Throwable cause) {
+        super(message, cause);
+        this.errorId = errorId;
+    }
+
+    public ErrorId getErrorId() {
+        return this.errorId;
+    }
+
 }

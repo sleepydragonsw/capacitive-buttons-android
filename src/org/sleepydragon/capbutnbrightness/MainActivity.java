@@ -66,9 +66,28 @@ public class MainActivity extends Activity implements View.OnClickListener {
     }
 
     private void showError(SetCapButtonBrightnessException e) {
+        final SetCapButtonBrightnessException.ErrorId errorId = e.getErrorId();
+        final String message;
+        switch (errorId) {
+            case SU_BINARY_MISSING:
+                message =
+                    "This device is not rooted; it must be rooted "
+                        + "to set the capacitive button brightness.";
+                break;
+            case ROOT_ACCESS_DENIED:
+                message =
+                    "Root access was denied; root access is required "
+                        + "to set the capacitive button brightness.";
+                break;
+            default:
+                message =
+                    "Unable to set capacitive button brightness: "
+                        + e.getMessage();
+                break;
+        }
+
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("Unable to set capacitive button brightness: "
-            + e.getMessage());
+        builder.setMessage(message);
         builder.setTitle("Error");
         builder.show();
     }
