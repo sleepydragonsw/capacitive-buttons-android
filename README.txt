@@ -26,12 +26,11 @@ this program in a file named LICENSE.txt; if not, see
 http://www.gnu.org/licenses
 
 ===============================================================================
-3. LICENSE
+3. THIRD-PARTY COMPONENTS
 
-RootTools - This application uses the RootTools library in order to run
-commands as the root user.  RootTools is open-source and is available under
-either the Apache V2.0 or GNU GPL v2 license (as of Sept 29, 2012). For details
-about this library, see its home page at http://code.google.com/p/roottools.  
+Some components of this application are not original work of the author, but
+were created by others who released their work under open-source licenses.
+For information about such parts of this application, see NOTICE.txt.
 
 ===============================================================================
 4. CREDITS
