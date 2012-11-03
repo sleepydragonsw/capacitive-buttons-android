@@ -22,7 +22,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="4"
-        android:src="@drawable/brightness_off" />
+        android:src="@drawable/brightness_button_off" />
 
     <ImageView
         android:id="@+id/btnDim"
@@ -30,7 +30,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="4"
-        android:src="@drawable/brightness_dim" />
+        android:src="@drawable/brightness_button_dim" />
 
     <ImageView
         android:id="@+id/btnBright"
@@ -38,7 +38,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="4"
-        android:src="@drawable/brightness_bright" />
+        android:src="@drawable/brightness_button_bright" />
 
     </LinearLayout>
 
