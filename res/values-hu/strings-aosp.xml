@@ -16,4 +16,6 @@
 
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
     <string name="menu_settings">"Beállítások"</string>
+    <string name="menu_about">"Névjegy"</string>
+    <string name="title_activity_about">"Névjegy"</string>
 </resources>

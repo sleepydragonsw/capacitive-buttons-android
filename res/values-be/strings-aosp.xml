@@ -16,4 +16,6 @@
 
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
     <string name="menu_settings">"Налады"</string>
+    <string name="menu_about">"Звесткі"</string>
+    <string name="title_activity_about">"Звесткі"</string>
 </resources>

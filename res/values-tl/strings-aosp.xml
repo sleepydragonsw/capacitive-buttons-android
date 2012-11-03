@@ -16,4 +16,6 @@
 
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
     <string name="menu_settings">"Mga Setting"</string>
+    <string name="menu_about">"Tungkol sa"</string>
+    <string name="title_activity_about">"Tungkol sa"</string>
 </resources>

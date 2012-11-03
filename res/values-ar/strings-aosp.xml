@@ -16,4 +16,6 @@
 
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
     <string name="menu_settings">"الإعدادات"</string>
+    <string name="menu_about">"حول"</string>
+    <string name="title_activity_about">"حول"</string>
 </resources>

@@ -16,4 +16,6 @@
 
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
     <string name="menu_settings">"Instellings"</string>
+    <string name="menu_about">"Meer oor"</string>
+    <string name="title_activity_about">"Meer oor"</string>
 </resources>

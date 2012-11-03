@@ -16,4 +16,6 @@
 
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
     <string name="menu_settings">"Ustawienia"</string>
+    <string name="menu_about">"Informacje"</string>
+    <string name="title_activity_about">"Informacje"</string>
 </resources>
