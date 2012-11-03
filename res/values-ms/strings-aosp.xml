@@ -18,4 +18,5 @@
     <string name="menu_settings">"Tetapan"</string>
     <string name="menu_about">"Mengenai"</string>
     <string name="title_activity_about">"Mengenai"</string>
+    <string name="default_brightness_label">"Lalai"</string>
 </resources>

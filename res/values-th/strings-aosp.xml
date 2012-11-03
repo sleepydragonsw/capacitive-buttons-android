@@ -18,4 +18,5 @@
     <string name="menu_settings">"การตั้งค่า"</string>
     <string name="menu_about">"เกี่ยวกับ"</string>
     <string name="title_activity_about">"เกี่ยวกับ"</string>
+    <string name="default_brightness_label">"เริ่มต้น"</string>
 </resources>

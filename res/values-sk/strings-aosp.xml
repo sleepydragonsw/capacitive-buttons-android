@@ -18,4 +18,5 @@
     <string name="menu_settings">"Nastavenia"</string>
     <string name="menu_about">"O službe"</string>
     <string name="title_activity_about">"O službe"</string>
+    <string name="default_brightness_label">"Predvolené"</string>
 </resources>

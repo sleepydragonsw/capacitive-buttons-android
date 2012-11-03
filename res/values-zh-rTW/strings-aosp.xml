@@ -18,4 +18,5 @@
     <string name="menu_settings">"設定"</string>
     <string name="menu_about">"相關資訊"</string>
     <string name="title_activity_about">"相關資訊"</string>
+    <string name="default_brightness_label">"預設"</string>
 </resources>

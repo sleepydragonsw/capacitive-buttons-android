@@ -18,4 +18,5 @@
     <string name="menu_settings">"Iestatījumi"</string>
     <string name="menu_about">"Par"</string>
     <string name="title_activity_about">"Par"</string>
+    <string name="default_brightness_label">"Noklusējums"</string>
 </resources>

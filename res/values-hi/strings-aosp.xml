@@ -18,4 +18,5 @@
     <string name="menu_settings">"सेटिंग"</string>
     <string name="menu_about">"इसके बारे में"</string>
     <string name="title_activity_about">"इसके बारे में"</string>
+    <string name="default_brightness_label">"डिफ़ॉल्ट"</string>
 </resources>

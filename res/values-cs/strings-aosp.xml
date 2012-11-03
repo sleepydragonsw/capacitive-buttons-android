@@ -18,4 +18,5 @@
     <string name="menu_settings">"Nastavení"</string>
     <string name="menu_about">"O aplikaci"</string>
     <string name="title_activity_about">"O aplikaci"</string>
+    <string name="default_brightness_label">"Výchozí nastavení"</string>
 </resources>

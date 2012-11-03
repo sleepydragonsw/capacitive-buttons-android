@@ -8,25 +8,33 @@
         android:layout_height="match_parent"
         android:orientation="vertical" >
 
+    <Button
+        android:id="@+id/btnDefault"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="@string/default_brightness_label" />
+
     <ImageView
         android:id="@+id/btnOff"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
+        android:layout_weight="4"
         android:src="@drawable/brightness_off" />
 
     <ImageView
         android:id="@+id/btnDim"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
+        android:layout_weight="4"
         android:src="@drawable/brightness_dim" />
 
     <ImageView
         android:id="@+id/btnBright"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
+        android:layout_weight="4"
         android:src="@drawable/brightness_bright" />
 
     </LinearLayout>

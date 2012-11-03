@@ -110,19 +110,23 @@ public class Settings {
      */
     public void setLevel(CapButtonBrightness.Level level) {
         final String value;
-        switch (level) {
-            case OFF:
-                value = LEVEL_OFF;
-                break;
-            case DIM:
-                value = LEVEL_DIM;
-                break;
-            case BRIGHT:
-                value = LEVEL_BRIGHT;
-                break;
-            default:
-                value = null;
-                break;
+        if (level == null) {
+            value = null;
+        } else {
+            switch (level) {
+                case OFF:
+                    value = LEVEL_OFF;
+                    break;
+                case DIM:
+                    value = LEVEL_DIM;
+                    break;
+                case BRIGHT:
+                    value = LEVEL_BRIGHT;
+                    break;
+                default:
+                    value = null;
+                    break;
+            }
         }
 
         final SharedPreferences prefs = this.getSharedPreferences();

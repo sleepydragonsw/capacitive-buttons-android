@@ -33,9 +33,11 @@ public class MainActivity extends Activity implements View.OnClickListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        final View btnDefault = findViewById(R.id.btnDefault);
         final View btnOff = findViewById(R.id.btnOff);
         final View btnDim = findViewById(R.id.btnDim);
         final View btnBright = findViewById(R.id.btnBright);
+        btnDefault.setOnClickListener(this);
         btnOff.setOnClickListener(this);
         btnDim.setOnClickListener(this);
         btnBright.setOnClickListener(this);
@@ -45,15 +47,21 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
     public void onClick(View view) {
         final CapButtonBrightness.Level level = getBrightnessLevel(view);
-        if (level != null) {
-            try {
-                CapButtonBrightness.set(level);
-                this.settings.setLevel(level);
-            } catch (InterruptedException e) {
-                // odd... ignore it I guess??
-            } catch (SetCapButtonBrightnessException e) {
-                this.showError(e);
-            }
+
+        final CapButtonBrightness.Level levelToSet;
+        if (level == null) {
+            levelToSet = CapButtonBrightness.Level.BRIGHT;
+        } else {
+            levelToSet = level;
+        }
+
+        try {
+            CapButtonBrightness.set(levelToSet);
+            this.settings.setLevel(level);
+        } catch (InterruptedException e) {
+            // odd... ignore it I guess??
+        } catch (SetCapButtonBrightnessException e) {
+            this.showError(e);
         }
     }
 
@@ -72,6 +80,8 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
         final int id = view.getId();
         switch (id) {
+            case R.id.btnDefault:
+                return null;
             case R.id.btnOff:
                 return CapButtonBrightness.Level.OFF;
             case R.id.btnDim:
@@ -79,7 +89,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
             case R.id.btnBright:
                 return CapButtonBrightness.Level.BRIGHT;
             default:
-                return null;
+                throw new IllegalArgumentException("unknown view: " + view);
         }
     }
 

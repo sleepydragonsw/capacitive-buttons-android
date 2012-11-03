@@ -18,4 +18,5 @@
     <string name="menu_settings">"Definições"</string>
     <string name="menu_about">"Acerca de"</string>
     <string name="title_activity_about">"Acerca de"</string>
+    <string name="default_brightness_label">"Predefinido"</string>
 </resources>

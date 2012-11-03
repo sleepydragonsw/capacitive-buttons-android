@@ -18,4 +18,5 @@
     <string name="menu_settings">"Setelan"</string>
     <string name="menu_about">"Tentang"</string>
     <string name="title_activity_about">"Tentang"</string>
+    <string name="default_brightness_label">"Default"</string>
 </resources>

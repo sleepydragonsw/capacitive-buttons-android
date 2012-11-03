@@ -18,4 +18,5 @@
     <string name="menu_settings">"Postavke"</string>
     <string name="menu_about">"O"</string>
     <string name="title_activity_about">"O"</string>
+    <string name="default_brightness_label">"Zadano"</string>
 </resources>

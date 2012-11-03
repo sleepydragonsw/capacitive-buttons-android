@@ -18,4 +18,5 @@
     <string name="menu_settings">"Configuració"</string>
     <string name="menu_about">"Quant a"</string>
     <string name="title_activity_about">"Quant a"</string>
+    <string name="default_brightness_label">"Predeterminada"</string>
 </resources>

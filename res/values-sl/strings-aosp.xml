@@ -18,4 +18,5 @@
     <string name="menu_settings">"Nastavitve"</string>
     <string name="menu_about">"O programu"</string>
     <string name="title_activity_about">"O programu"</string>
+    <string name="default_brightness_label">"Privzeto"</string>
 </resources>

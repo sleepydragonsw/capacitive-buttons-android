@@ -18,4 +18,5 @@
     <string name="menu_settings">"Indstillinger"</string>
     <string name="menu_about">"Om"</string>
     <string name="title_activity_about">"Om"</string>
+    <string name="default_brightness_label">"Standard"</string>
 </resources>

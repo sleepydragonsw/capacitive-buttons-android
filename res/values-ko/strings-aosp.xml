@@ -18,4 +18,5 @@
     <string name="menu_settings">"설정"</string>
     <string name="menu_about">"정보"</string>
     <string name="title_activity_about">"정보"</string>
+    <string name="default_brightness_label">"기본값"</string>
 </resources>

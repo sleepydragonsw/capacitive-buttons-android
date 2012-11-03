@@ -18,4 +18,5 @@
     <string name="menu_settings">"Instellingen"</string>
     <string name="menu_about">"Over"</string>
     <string name="title_activity_about">"Over"</string>
+    <string name="default_brightness_label">"Standaard"</string>
 </resources>

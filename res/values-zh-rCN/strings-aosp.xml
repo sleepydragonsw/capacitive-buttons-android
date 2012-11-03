@@ -18,4 +18,5 @@
     <string name="menu_settings">"设置"</string>
     <string name="menu_about">"关于"</string>
     <string name="title_activity_about">"关于"</string>
+    <string name="default_brightness_label">"默认"</string>
 </resources>

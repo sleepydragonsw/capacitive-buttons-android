@@ -18,4 +18,5 @@
     <string name="menu_settings">"Настройки"</string>
     <string name="menu_about">"Информация"</string>
     <string name="title_activity_about">"Информация"</string>
+    <string name="default_brightness_label">"Стандартно"</string>
 </resources>

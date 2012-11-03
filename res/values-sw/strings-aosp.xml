@@ -18,4 +18,5 @@
     <string name="menu_settings">"Mipangilio"</string>
     <string name="menu_about">"Kuhusu"</string>
     <string name="title_activity_about">"Kuhusu"</string>
+    <string name="default_brightness_label">"Chaguo-msingi"</string>
 </resources>

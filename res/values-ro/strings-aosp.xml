@@ -18,4 +18,5 @@
     <string name="menu_settings">"Setări"</string>
     <string name="menu_about">"Despre"</string>
     <string name="title_activity_about">"Despre"</string>
+    <string name="default_brightness_label">"Prestabilit"</string>
 </resources>

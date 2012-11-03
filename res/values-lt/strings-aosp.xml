@@ -18,4 +18,5 @@
     <string name="menu_settings">"Nustatymai"</string>
     <string name="menu_about">"Apie"</string>
     <string name="title_activity_about">"Apie"</string>
+    <string name="default_brightness_label">"Numatytasis"</string>
 </resources>

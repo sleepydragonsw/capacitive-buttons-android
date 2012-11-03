@@ -18,4 +18,5 @@
     <string name="menu_settings">"Izilungiselelo"</string>
     <string name="menu_about">"Mayelana"</string>
     <string name="title_activity_about">"Mayelana"</string>
+    <string name="default_brightness_label">"Okuzenzakalelayo"</string>
 </resources>
