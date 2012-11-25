@@ -42,4 +42,11 @@ the time of writing (Sept 29, 2012) permission has not yet been requested from
 Turge to use the work from this thread; however, it will be privately requested
 prior to official release of this application.
 
+The button brightness images, res\drawable\brightness_bright.png,
+res\drawable\brightness_dim.png, and res\drawable\brightness_off.png were
+provided by user gridlock489 on the xda-developers.com forums:
+http://forum.xda-developers.com/member.php?u=4746227.  The images that were
+previously used were too small and were becoming pixelated when scaled up.
+Thanks to gridlock489 for this contribution.
+
 ===============================================================================

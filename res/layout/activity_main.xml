@@ -1,18 +1,13 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical" >
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
 
     <Button
         android:id="@+id/btnDefault"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
         android:gravity="center"
         android:text="@string/default_brightness_label" />
 
@@ -21,7 +16,7 @@
         android:contentDescription="@string/btn_off"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="4"
+        android:layout_weight="1"
         android:src="@drawable/brightness_button_off" />
 
     <ImageView
@@ -29,7 +24,7 @@
         android:contentDescription="@string/btn_dim"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="4"
+        android:layout_weight="1"
         android:src="@drawable/brightness_button_dim" />
 
     <ImageView
@@ -37,9 +32,7 @@
         android:contentDescription="@string/btn_bright"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="4"
+        android:layout_weight="1"
         android:src="@drawable/brightness_button_bright" />
 
-    </LinearLayout>
-
-</RelativeLayout>
+</LinearLayout>
