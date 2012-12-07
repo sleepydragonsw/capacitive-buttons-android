@@ -1,6 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="org.sleepydragon.capbutnbrightness"
-    android:versionCode="6"
+    android:versionCode="7"
     android:versionName="@string/app_version" >
 
     <uses-sdk
