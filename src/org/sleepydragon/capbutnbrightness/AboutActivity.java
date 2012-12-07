@@ -16,7 +16,12 @@
  */
 package org.sleepydragon.capbutnbrightness;
 
+import org.sleepydragon.capbutnbrightness.phone.PhoneInfo;
+import org.sleepydragon.capbutnbrightness.phone.PhoneInfoChooser;
+
+import android.os.Build;
 import android.os.Bundle;
+import android.widget.TextView;
 import android.app.Activity;
 
 public class AboutActivity extends Activity {
@@ -25,6 +30,18 @@ public class AboutActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_about);
+
+        final PhoneInfo phoneInfo = PhoneInfoChooser.getForCurrentPhone();
+        final String deviceName;
+        if (phoneInfo == null) {
+            deviceName = "unknown device (" + Build.DEVICE + ")";
+        } else {
+            deviceName = phoneInfo.getName();
+        }
+
+        final TextView deviceNameTxt =
+            (TextView) findViewById(R.id.txtDeviceName);
+        deviceNameTxt.setText(" " + deviceName);
     }
 
 }

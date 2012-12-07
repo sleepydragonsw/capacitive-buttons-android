@@ -47,6 +47,12 @@ public class SetCapButtonBrightnessException extends Exception {
          * command as root.
          */
         ROOT_ACCESS_IOEXCEPTION,
+
+        /**
+         * Error indicating that the application does not know how to set the
+         * capacitive button brightness on this phone.
+         */
+        UNSUPPORTED_PHONE,
     }
 
     private final ErrorId errorId;

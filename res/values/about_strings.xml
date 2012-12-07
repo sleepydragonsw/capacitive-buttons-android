@@ -2,6 +2,7 @@
 
     <string name="about_author">By: Denver Coneybeare &lt;denver@sleepydragon.org&gt;</string>
     <string name="about_source_location">The source code is freely available from https://code.google.com/p/hox-cap-butn-brightness</string>
+    <string name="about_device_name">Detected device: </string>
     <string name="about_license1">
         Capacitive Button Brightness is free software: you can redistribute it
         and/or modify it under the terms of the GNU General Public License as

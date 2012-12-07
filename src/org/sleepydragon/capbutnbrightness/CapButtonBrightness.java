@@ -19,6 +19,9 @@ package org.sleepydragon.capbutnbrightness;
 import java.io.IOException;
 import java.util.concurrent.TimeoutException;
 
+import org.sleepydragon.capbutnbrightness.phone.PhoneInfo;
+import org.sleepydragon.capbutnbrightness.phone.PhoneInfoChooser;
+
 import android.util.Log;
 
 import com.stericson.RootTools.Command;
@@ -29,13 +32,6 @@ import com.stericson.RootTools.Shell;
  * Set the brightness of the capacitive buttons.
  */
 public class CapButtonBrightness {
-
-    /**
-     * The path of the file to which the current is written in order to set the
-     * capacitive button brightness.
-     */
-    public static final String SET_PATH = "/sys/devices/platform/msm_ssbi.0/"
-        + "pm8921-core/pm8xxx-led/leds/button-backlight/currents";
 
     /**
      * The possible brightness levels to set.
@@ -68,6 +64,13 @@ public class CapButtonBrightness {
         Log.i(Constants.LOG_TAG, "Setting capacitive button brightness to "
             + level.name());
 
+        final PhoneInfo phoneInfo = PhoneInfoChooser.getForCurrentPhone();
+        if (phoneInfo == null) {
+            throw new SetCapButtonBrightnessException(
+                SetCapButtonBrightnessException.ErrorId.UNSUPPORTED_PHONE,
+                "current phone is unsupported", null);
+        }
+
         if (!RootTools.isRootAvailable()) {
             throw new SetCapButtonBrightnessException(
                 SetCapButtonBrightnessException.ErrorId.SU_BINARY_MISSING,
@@ -78,8 +81,9 @@ public class CapButtonBrightness {
                 "root access denied", null);
         }
 
-        final int current = getCurrent(level);
-        final String commandStr = getSetBrightnessCommand(current);
+        final int current = phoneInfo.getLevelToWrite(level);
+        final String path = phoneInfo.getPath();
+        final String commandStr = getSetBrightnessCommand(current, path);
         final Shell shell;
         try {
             shell = RootTools.getShell(true);
@@ -111,37 +115,22 @@ public class CapButtonBrightness {
      * order to set the capacitive button brightness.
      * 
      * @param current the current to set.
+     * @param path the path of the file to which to write the current.
      * @return the command to run to set the capacitive button brightness to the
      * given current.
+     * @throws NullPointerException if path==null.
      */
-    public static String getSetBrightnessCommand(int current) {
+    public static String getSetBrightnessCommand(int current, String path) {
+        if (path == null) {
+            throw new NullPointerException("path==null");
+        }
         StringBuilder sb = new StringBuilder();
         sb.append("echo ");
         sb.append(current);
         sb.append(" > ");
-        sb.append(SET_PATH);
+        sb.append(path);
         String s = sb.toString();
         return s;
-    }
-
-    /**
-     * Returns the "current" to set in SET_PATH in order to set the brightness
-     * of the capacitive buttons to the given level.
-     * 
-     * @param level the brightness level whose current value to get.
-     * @return the current value of the given brightness level.
-     */
-    public static int getCurrent(Level level) {
-        switch (level) {
-            case OFF:
-                return 0;
-            case DIM:
-                return 1;
-            case BRIGHT:
-                return 2;
-            default:
-                throw new AssertionError("unknown level: " + level);
-        }
     }
 
     private static class CommandNoCapture extends Command {
