@@ -33,7 +33,7 @@ public class OnexEvitaPhoneInfo extends PhoneInfo {
      * Creates a new instance of this class.
      */
     public OnexEvitaPhoneInfo() {
-        super(NAME, PATH);
+        super(NAME, PATH, 3);
     }
 
     @Override

@@ -16,6 +16,9 @@
  */
 package org.sleepydragon.capbutnbrightness;
 
+import org.sleepydragon.capbutnbrightness.phone.PhoneInfo;
+import org.sleepydragon.capbutnbrightness.phone.PhoneInfoChooser;
+
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -31,16 +34,41 @@ public class MainActivity extends Activity implements View.OnClickListener {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        final PhoneInfo phoneInfo = PhoneInfoChooser.getForCurrentPhone();
+        final int numBrightnessLevels;
+        if (phoneInfo == null) {
+            // for unknown phones, just show the default 3-button layout
+            numBrightnessLevels = 3;
+        } else {
+            numBrightnessLevels = phoneInfo.getNumLevels();
+        }
 
-        final View btnDefault = findViewById(R.id.btnDefault);
-        final View btnOff = findViewById(R.id.btnOff);
-        final View btnDim = findViewById(R.id.btnDim);
-        final View btnBright = findViewById(R.id.btnBright);
+        final int layoutId;
+        switch (numBrightnessLevels) {
+            case 2:
+                layoutId = R.layout.activity_main_2button;
+                break;
+            case 3:
+                layoutId = R.layout.activity_main_3button;
+                break;
+            default:
+                throw new RuntimeException("unsupported number of buttons: "
+                    + numBrightnessLevels);
+        }
+        this.setContentView(layoutId);
+
+        final View btnDefault = this.findViewById(R.id.btnDefault);
         btnDefault.setOnClickListener(this);
+        final View btnOff = this.findViewById(R.id.btnOff);
         btnOff.setOnClickListener(this);
-        btnDim.setOnClickListener(this);
+        final View btnBright = this.findViewById(R.id.btnBright);
         btnBright.setOnClickListener(this);
+
+        // no dim button in 2-brightness-levels layout
+        if (numBrightnessLevels >= 3) {
+            final View btnDim = this.findViewById(R.id.btnDim);
+            btnDim.setOnClickListener(this);
+        }
 
         this.settings = new Settings(this);
     }

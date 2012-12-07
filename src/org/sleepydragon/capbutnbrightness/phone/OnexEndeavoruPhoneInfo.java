@@ -33,7 +33,7 @@ public class OnexEndeavoruPhoneInfo extends PhoneInfo {
      * Creates a new instance of this class.
      */
     public OnexEndeavoruPhoneInfo() {
-        super(NAME, PATH);
+        super(NAME, PATH, 2);
     }
 
     @Override

@@ -26,6 +26,7 @@ public abstract class PhoneInfo {
 
     private final String name;
     private final String path;
+    private final int numLevels;
 
     /**
      * Creates a new instance of this class.
@@ -33,9 +34,10 @@ public abstract class PhoneInfo {
      * @param name is a human-friendly name for this phone model.
      * @param path the path of the file to which the brightness level is
      * written.
+     * @param numLevels the number of brightness levels supported by this phone.
      * @throws NullPointerException if any argument is null.
      */
-    public PhoneInfo(String name, String path) {
+    public PhoneInfo(String name, String path, int numLevels) {
         if (name == null) {
             throw new NullPointerException("name==null");
         } else if (path == null) {
@@ -43,6 +45,7 @@ public abstract class PhoneInfo {
         }
         this.name = name;
         this.path = path;
+        this.numLevels = numLevels;
     }
 
     /**
@@ -63,6 +66,15 @@ public abstract class PhoneInfo {
      */
     public String getName() {
         return this.name;
+    }
+
+    /**
+     * Returns the number of brightness levels supported by this phone.
+     *
+     * @return the "numLevels" that was specified to the constructor.
+     */
+    public int getNumLevels() {
+        return this.numLevels;
     }
 
     /**
