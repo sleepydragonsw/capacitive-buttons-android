@@ -17,6 +17,8 @@
 package org.sleepydragon.capbutnbrightness;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeoutException;
 
 import org.sleepydragon.capbutnbrightness.phone.PhoneInfo;
@@ -81,9 +83,15 @@ public class CapButtonBrightness {
                 "root access denied", null);
         }
 
+        // on endeavoru, the backlight does not turn back on with the screen
+        // if we set the brightness to "on"; to work around this, only set the
+        // file's permissions to read-only if setting the brightness to "off"
+        final boolean makeReadOnly = (level == Level.OFF);
+
         final int current = phoneInfo.getLevelToWrite(level);
         final String path = phoneInfo.getPath();
-        final String commandStr = getSetBrightnessCommand(current, path);
+        final String[] commandStrs =
+            getSetBrightnessCommands(current, path, makeReadOnly);
         final Shell shell;
         try {
             shell = RootTools.getShell(true);
@@ -98,39 +106,44 @@ public class CapButtonBrightness {
                 "unable to get root shell: IO error: " + e.getMessage(), e);
         }
 
-        final Command command = new CommandNoCapture(1, commandStr);
-        try {
-            shell.add(command);
-        } catch (IOException e) {
-            throw new SetCapButtonBrightnessException(
-                SetCapButtonBrightnessException.ErrorId.ROOT_ACCESS_IOEXCEPTION,
-                "running command as root failed: " + e.getMessage(), e);
+        for (final String commandStr : commandStrs) {
+            final Command command = new CommandNoCapture(1, commandStr);
+            try {
+                shell.add(command);
+            } catch (IOException e) {
+                throw new SetCapButtonBrightnessException(
+                    SetCapButtonBrightnessException.ErrorId.ROOT_ACCESS_IOEXCEPTION,
+                    "running command as root failed: " + e.getMessage(), e);
+            }
+            command.waitForFinish();
         }
-
-        command.waitForFinish();
     }
 
     /**
-     * Creates and returns a string whose value is the command to execute in
-     * order to set the capacitive button brightness.
+     * Creates and returns a list of strings whose values are the commands to
+     * execute in * order to set the capacitive button brightness.
      * 
      * @param current the current to set.
      * @param path the path of the file to which to write the current.
-     * @return the command to run to set the capacitive button brightness to the
-     * given current.
+     * @param makeReadOnly if true, then set the file to read-only permissions
+     * as the final command; if false, then leave the file permissions as
+     * read-write.
+     * @return the commands to run to set the capacitive button brightness to
+     * the given current.
      * @throws NullPointerException if path==null.
      */
-    public static String getSetBrightnessCommand(int current, String path) {
+    public static String[] getSetBrightnessCommands(int current, String path,
+            boolean makeReadOnly) {
         if (path == null) {
             throw new NullPointerException("path==null");
         }
-        StringBuilder sb = new StringBuilder();
-        sb.append("echo ");
-        sb.append(current);
-        sb.append(" > ");
-        sb.append(path);
-        String s = sb.toString();
-        return s;
+        final List<String> list = new ArrayList<String>();
+        list.add("chmod 666 " + path);
+        list.add("echo " + current + " > " + path);
+        if (makeReadOnly) {
+            list.add("chmod 444 " + path);
+        }
+        return list.toArray(new String[list.size()]);
     }
 
     private static class CommandNoCapture extends Command {
