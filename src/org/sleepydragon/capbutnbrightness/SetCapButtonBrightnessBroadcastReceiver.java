@@ -1,20 +1,24 @@
 /*
  * This file is part of Capacitive Button Brightness.
- * 
+ *
  * Capacitive Button Brightness is free software: you can redistribute it
  * and/or modify it under the terms of the GNU General Public License as
  * published by the Free Software Foundation, either version 3 of the License,
  * or (at your option) any later version.
- * 
+ *
  * Capacitive Button Brightness is distributed in the hope that it will be
  * useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General
  * Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License along with
  * Capacitive Button Brightness.  If not, see <http://www.gnu.org/licenses/>.
  */
 package org.sleepydragon.capbutnbrightness;
+
+import org.sleepydragon.capbutnbrightness.devices.CapacitiveButtonsBacklightBrightness;
+import org.sleepydragon.capbutnbrightness.devices.DeviceInfo;
+import org.sleepydragon.capbutnbrightness.devices.DeviceInfoDatabase;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -32,7 +36,7 @@ public class SetCapButtonBrightnessBroadcastReceiver extends BroadcastReceiver {
      * given Settings. If the level retrieved from the settings is null, then
      * this method does nothing. Any exceptions thrown during settings of the
      * capacitive button brightness will be logged in logcat.
-     * 
+     *
      * @param settings the settings from which to retrieve the level of the
      * capacitive button brightness to set.
      * @throws NullPointerException if settings==null.
@@ -41,13 +45,21 @@ public class SetCapButtonBrightnessBroadcastReceiver extends BroadcastReceiver {
         if (settings == null) {
             throw new NullPointerException("settings==null");
         }
-        final CapButtonBrightness.Level level = settings.getLevel();
+        final Integer level = settings.getLevel();
         if (level != null) {
-            try {
-                CapButtonBrightness.set(level);
-            } catch (final Exception e) {
-                Log.e(Constants.LOG_TAG, "unable to set capacitive button "
-                    + "brightness in " + this.getClass().getName(), e);
+            final DeviceInfoDatabase db = new DeviceInfoDatabase();
+            final DeviceInfo device = db.getForCurrentDevice();
+            final CapacitiveButtonsBacklightBrightness buttons =
+                device.getCapacitiveButtonsBacklightBrightness();
+
+            if (buttons != null) {
+                try {
+                    buttons.set(level);
+                } catch (final Exception e) {
+                    Log.e(Constants.LOG_TAG, "unable to set capacitive button "
+                        + "brightness on boot in " + this.getClass().getName(),
+                        e);
+                }
             }
         }
     }
@@ -75,7 +87,7 @@ public class SetCapButtonBrightnessBroadcastReceiver extends BroadcastReceiver {
      * then this method will return false if the
      * {@link Settings#isSetBrightnessOnBootEnabled()} return false. Returns
      * true under all other conditions.
-     * 
+     *
      * @param intent the intent to check.
      * @param settings the settings to check.
      * @return true if the capacitive button brightness should be set by this

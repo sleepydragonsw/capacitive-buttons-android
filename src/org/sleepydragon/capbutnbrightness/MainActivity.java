@@ -1,61 +1,63 @@
 /*
  * This file is part of Capacitive Button Brightness.
- * 
+ *
  * Capacitive Button Brightness is free software: you can redistribute it
  * and/or modify it under the terms of the GNU General Public License as
  * published by the Free Software Foundation, either version 3 of the License,
  * or (at your option) any later version.
- * 
+ *
  * Capacitive Button Brightness is distributed in the hope that it will be
  * useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General
  * Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License along with
  * Capacitive Button Brightness.  If not, see <http://www.gnu.org/licenses/>.
  */
 package org.sleepydragon.capbutnbrightness;
 
-import org.sleepydragon.capbutnbrightness.phone.PhoneInfo;
-import org.sleepydragon.capbutnbrightness.phone.PhoneInfoChooser;
+import org.sleepydragon.capbutnbrightness.devices.CapacitiveButtonsBacklightBrightness;
+import org.sleepydragon.capbutnbrightness.devices.DeviceInfo;
+import org.sleepydragon.capbutnbrightness.devices.DeviceInfoDatabase;
+import org.sleepydragon.capbutnbrightness.devices.FileCapacitiveButtonsBacklightBrightness.NotRootedException;
+import org.sleepydragon.capbutnbrightness.devices.FileCapacitiveButtonsBacklightBrightness.RootAccessDeniedException;
 
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.Intent;
 
 public class MainActivity extends Activity implements View.OnClickListener {
 
+    private CapacitiveButtonsBacklightBrightness buttons;
     private Settings settings;
+
+    public void onClick(View view) {
+        final CapacitiveButtonsBacklightBrightness buttons = this.buttons;
+        if (buttons == null) {
+            this.showError("This device is not supported by this application");
+        } else {
+            final Integer level = getBrightnessLevel(view);
+            this.settings.setLevel(level);
+            try {
+                if (level == null) {
+                    buttons.setDefault();
+                } else {
+                    buttons.set(level);
+                }
+            } catch (final CapacitiveButtonsBacklightBrightness.SetException e) {
+                this.showError(e);
+            }
+        }
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        final PhoneInfo phoneInfo = PhoneInfoChooser.getForCurrentPhone();
-        final int numBrightnessLevels;
-        if (phoneInfo == null) {
-            // for unknown phones, just show the default 3-button layout
-            numBrightnessLevels = 3;
-        } else {
-            numBrightnessLevels = phoneInfo.getNumLevels();
-        }
-
-        final int layoutId;
-        switch (numBrightnessLevels) {
-            case 2:
-                layoutId = R.layout.activity_main_2button;
-                break;
-            case 3:
-                layoutId = R.layout.activity_main_3button;
-                break;
-            default:
-                throw new RuntimeException("unsupported number of buttons: "
-                    + numBrightnessLevels);
-        }
-        this.setContentView(layoutId);
+        this.setContentView(R.layout.activity_main_3button);
 
         final View btnDefault = this.findViewById(R.id.btnDefault);
         btnDefault.setOnClickListener(this);
@@ -63,86 +65,19 @@ public class MainActivity extends Activity implements View.OnClickListener {
         btnOff.setOnClickListener(this);
         final View btnBright = this.findViewById(R.id.btnBright);
         btnBright.setOnClickListener(this);
+        final View btnDim = this.findViewById(R.id.btnDim);
+        btnDim.setOnClickListener(this);
 
-        // no dim button in 2-brightness-levels layout
-        if (numBrightnessLevels >= 3) {
-            final View btnDim = this.findViewById(R.id.btnDim);
-            btnDim.setOnClickListener(this);
-        }
+        final DeviceInfoDatabase devices = new DeviceInfoDatabase();
+        final DeviceInfo device = devices.getForCurrentDevice();
+        this.buttons = device.getCapacitiveButtonsBacklightBrightness();
 
         this.settings = new Settings(this);
     }
 
-    public void onClick(View view) {
-        final CapButtonBrightness.Level level = getBrightnessLevel(view);
-
-        final CapButtonBrightness.Level levelToSet;
-        if (level == null) {
-            levelToSet = CapButtonBrightness.Level.BRIGHT;
-        } else {
-            levelToSet = level;
-        }
-
-        try {
-            CapButtonBrightness.set(levelToSet);
-            this.settings.setLevel(level);
-        } catch (InterruptedException e) {
-            // odd... ignore it I guess??
-        } catch (SetCapButtonBrightnessException e) {
-            this.showError(e);
-        }
-    }
-
-    private void showError(SetCapButtonBrightnessException e) {
-        final SetCapButtonBrightnessException.ErrorId errorId = e.getErrorId();
-        final String message;
-        switch (errorId) {
-            case SU_BINARY_MISSING:
-                message =
-                    "This device is not rooted; it must be rooted "
-                        + "to set the capacitive button brightness.";
-                break;
-            case ROOT_ACCESS_DENIED:
-                message =
-                    "Root access was denied; root access is required "
-                        + "to set the capacitive button brightness.";
-                break;
-            default:
-                message =
-                    "Unable to set capacitive button brightness: "
-                        + e.getMessage();
-                break;
-        }
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage(message);
-        builder.setTitle("Error");
-        builder.show();
-    }
-
-    private static CapButtonBrightness.Level getBrightnessLevel(View view) {
-        if (view == null) {
-            return null;
-        }
-
-        final int id = view.getId();
-        switch (id) {
-            case R.id.btnDefault:
-                return null;
-            case R.id.btnOff:
-                return CapButtonBrightness.Level.OFF;
-            case R.id.btnDim:
-                return CapButtonBrightness.Level.DIM;
-            case R.id.btnBright:
-                return CapButtonBrightness.Level.BRIGHT;
-            default:
-                throw new IllegalArgumentException("unknown view: " + view);
-        }
-    }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.activity_main, menu);
+        this.getMenuInflater().inflate(R.menu.activity_main, menu);
         return true;
     }
 
@@ -158,6 +93,47 @@ public class MainActivity extends Activity implements View.OnClickListener {
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void showError(CapacitiveButtonsBacklightBrightness.SetException e) {
+        assert e != null;
+        final String message;
+        if (e instanceof NotRootedException) {
+            message =
+                "This device is not rooted; it must be rooted in order for "
+                    + "this application to function correctly";
+        } else if (e instanceof RootAccessDeniedException) {
+            message =
+                "Root access was denied; this application requires root "
+                    + " permissions in order to function correctly";
+        } else {
+            message = e.getMessage();
+        }
+        this.showError(message);
+    }
+
+    private void showError(String message) {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(message);
+        builder.setTitle("Error");
+        builder.show();
+    }
+
+    private static Integer getBrightnessLevel(View view) {
+        assert view != null;
+        final int id = view.getId();
+        switch (id) {
+            case R.id.btnDefault:
+                return null;
+            case R.id.btnOff:
+                return 0;
+            case R.id.btnDim:
+                return 50;
+            case R.id.btnBright:
+                return 100;
+            default:
+                throw new IllegalArgumentException("unknown view: " + view);
         }
     }
 
