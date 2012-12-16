@@ -35,12 +35,41 @@ public class MainActivity extends Activity implements View.OnClickListener {
     private CapacitiveButtonsBacklightBrightness buttons;
     private Settings settings;
 
+    private Integer getBrightnessLevel(View view) {
+        assert view != null;
+
+        final int defaultDimBrightness;
+        final CapacitiveButtonsBacklightBrightness buttons = this.buttons;
+        if (buttons != null) {
+            defaultDimBrightness = buttons.getDefaultDimLevel();
+        } else {
+            // just choose some arbitrary value in the range [0,100]
+            defaultDimBrightness = 50;
+        }
+        final int dimBrightness =
+            this.settings.getDimLevel(defaultDimBrightness);
+
+        final int id = view.getId();
+        switch (id) {
+            case R.id.btnDefault:
+                return null;
+            case R.id.btnOff:
+                return 0;
+            case R.id.btnDim:
+                return dimBrightness;
+            case R.id.btnBright:
+                return 100;
+            default:
+                throw new IllegalArgumentException("unknown view: " + view);
+        }
+    }
+
     public void onClick(View view) {
         final CapacitiveButtonsBacklightBrightness buttons = this.buttons;
         if (buttons == null) {
             this.showError("This device is not supported by this application");
         } else {
-            final Integer level = getBrightnessLevel(view);
+            final Integer level = this.getBrightnessLevel(view);
             this.settings.setLevel(level);
             try {
                 if (level == null) {
@@ -57,7 +86,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.setContentView(R.layout.activity_main_3button);
+        this.setContentView(R.layout.activity_main);
 
         final View btnDefault = this.findViewById(R.id.btnDefault);
         btnDefault.setOnClickListener(this);
@@ -118,23 +147,6 @@ public class MainActivity extends Activity implements View.OnClickListener {
         builder.setMessage(message);
         builder.setTitle("Error");
         builder.show();
-    }
-
-    private static Integer getBrightnessLevel(View view) {
-        assert view != null;
-        final int id = view.getId();
-        switch (id) {
-            case R.id.btnDefault:
-                return null;
-            case R.id.btnOff:
-                return 0;
-            case R.id.btnDim:
-                return 50;
-            case R.id.btnBright:
-                return 100;
-            default:
-                throw new IllegalArgumentException("unknown view: " + view);
-        }
     }
 
 }

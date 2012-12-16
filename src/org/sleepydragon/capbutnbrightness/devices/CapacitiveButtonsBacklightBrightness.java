@@ -22,6 +22,16 @@ package org.sleepydragon.capbutnbrightness.devices;
 public interface CapacitiveButtonsBacklightBrightness {
 
     /**
+     * Returns the default brightness level to use when the "dim" option is
+     * selected by a user.
+     *
+     * @return the default brightness level to use when the "dim" option is
+     * selected by a user; this value will be greater than or equal to 0 and
+     * less than or equal to 100.
+     */
+    public int getDefaultDimLevel();
+
+    /**
      * Returns whether or not setting the capacitive button brightness is
      * supported.
      *

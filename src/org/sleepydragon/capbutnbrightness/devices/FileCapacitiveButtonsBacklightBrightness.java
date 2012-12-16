@@ -37,6 +37,7 @@ public class FileCapacitiveButtonsBacklightBrightness implements
     private final int onValue;
     private final int offValue;
     private final int defaultBrightness;
+    private final int defaultDimBrightness;
 
     /**
      * Creates a new instance of FileCapacitiveButtonsBacklightBrightness.
@@ -52,11 +53,14 @@ public class FileCapacitiveButtonsBacklightBrightness implements
      * @param defaultBrightness the value to write to the file specified by
      * brightnessPath in order to set the brightness of the capacitive buttons
      * backlight to its default level.
+     * @param defaultDimBrightness the value to write to the file specified by
+     * brightnessPath in order to set the brightness of the capacitive buttons
+     * backlight to its default level when the "dim" option is selected.
      * @throws NullPointerException if any argument is null.
      */
     public FileCapacitiveButtonsBacklightBrightness(String onOffPath,
             String brightnessPath, int onValue, int offValue,
-            int defaultBrightness) {
+            int defaultBrightness, int defaultDimBrightness) {
         if (onOffPath == null) {
             throw new NullPointerException("onOffPath==null");
         } else if (brightnessPath == null) {
@@ -67,6 +71,11 @@ public class FileCapacitiveButtonsBacklightBrightness implements
         this.onValue = onValue;
         this.offValue = offValue;
         this.defaultBrightness = defaultBrightness;
+        this.defaultDimBrightness = defaultDimBrightness;
+    }
+
+    public int getDefaultDimLevel() {
+        return this.defaultDimBrightness;
     }
 
     /**

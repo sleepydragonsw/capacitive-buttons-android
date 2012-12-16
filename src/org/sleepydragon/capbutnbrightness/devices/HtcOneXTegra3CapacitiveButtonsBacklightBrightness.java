@@ -36,9 +36,10 @@ public class HtcOneXTegra3CapacitiveButtonsBacklightBrightness extends
     public static final int ON_VALUE = 255;
     public static final int OFF_VALUE = 0;
     public static final int DEFAULT_BRIGHTNESS = 100;
+    public static final int DEFAULT_DIM_BRIGHTNESS = 20;
 
     public HtcOneXTegra3CapacitiveButtonsBacklightBrightness() {
         super(ON_OFF_PATH, BRIGHTNESS_PATH, ON_VALUE, OFF_VALUE,
-            DEFAULT_BRIGHTNESS);
+            DEFAULT_BRIGHTNESS, DEFAULT_DIM_BRIGHTNESS);
     }
 }

@@ -28,6 +28,7 @@ public class Settings {
 
     private static final int PREFS_MODE = Context.MODE_MULTI_PROCESS;
     private static final String PREFS_KEY_BRIGHTNESS_LEVEL = "levelInt";
+    private static final String PREFS_KEY_DIM_LEVEL = "dimLevelInt";
     private static final String PREFS_KEY_SET_BRIGHTNESS_ON_BOOT =
         "setBrightnessOnBoot";
 
@@ -45,6 +46,33 @@ public class Settings {
             throw new NullPointerException("context==null");
         }
         this.context = context;
+    }
+
+    /**
+     * Gets the brightness level to use when "dim" is selected as the
+     * brightness.
+     *
+     * @param defaultLevel the value to return if the configuration option is
+     * not set; this value will be clamped between 0 and 100, inclusive, if
+     * used.
+     * @return the level to use when "dim" is selected as the brightness; will
+     * be between 0 and 100, inclusive, defaulting to 20 if not set.
+     */
+    public int getDimLevel(int defaultLevel) {
+        final SharedPreferences prefs = this.getSharedPreferences();
+        final int value = prefs.getInt(PREFS_KEY_DIM_LEVEL, defaultLevel);
+
+        // clamp level to the valid range
+        final int level;
+        if (value < 0) {
+            level = 0;
+        } else if (value > 100) {
+            level = 100;
+        } else {
+            level = value;
+        }
+
+        return level;
     }
 
     /**
@@ -90,6 +118,25 @@ public class Settings {
     }
 
     /**
+     * Sets the brightness level to use when "dim" is selected as the
+     * brightness.
+     *
+     * @param level the level to use when "dim" is selected as the brightness;
+     * must be between 0 and 100, inclusive.
+     * @throws IllegalArgumentException if the given level is outside its valid
+     * range.
+     */
+    public void setDimLevel(int level) {
+        if (level < 0 || level > 100) {
+            throw new IllegalArgumentException("invalid level: " + level);
+        }
+        final SharedPreferences prefs = this.getSharedPreferences();
+        final SharedPreferences.Editor editor = prefs.edit();
+        editor.putInt(PREFS_KEY_DIM_LEVEL, level);
+        editor.commit();
+    }
+
+    /**
      * Sets the saved value of the capacitive button brightness.
      *
      * @param level the level to set; may be null, in which case any saved level
@@ -122,5 +169,4 @@ public class Settings {
         editor.putBoolean(PREFS_KEY_SET_BRIGHTNESS_ON_BOOT, enabled);
         editor.commit();
     }
-
 }
