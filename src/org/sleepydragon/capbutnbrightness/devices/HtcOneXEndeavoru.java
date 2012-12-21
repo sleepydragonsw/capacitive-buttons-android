@@ -68,11 +68,11 @@ public class HtcOneXEndeavoru implements CapacitiveButtonsBacklightBrightness {
         } else {
             final boolean dim = (level != 100);
             final int currents = dim ? 1 : 3;
-            if (!inResponseToScreenOn) {
+            if (!inResponseToScreenOn || dim) {
                 FileHelper.writeToFile(currents, CURRENTS_PATH);
             }
             FileHelper.writeToFile(1, BRIGHTNESS_PATH);
-            if (!inResponseToScreenOn) {
+            if (!inResponseToScreenOn || dim) {
                 FileHelper.writeToFile(currents, CURRENTS_PATH);
             }
         }
