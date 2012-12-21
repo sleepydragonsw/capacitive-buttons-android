@@ -30,10 +30,10 @@ public class SettingsActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.getFragmentManager().beginTransaction()
-            .replace(android.R.id.content, new SettingsFragement()).commit();
+            .replace(android.R.id.content, new SettingsFragment()).commit();
     }
 
-    private static class SettingsFragement extends PreferenceFragment {
+    public static class SettingsFragment extends PreferenceFragment {
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
