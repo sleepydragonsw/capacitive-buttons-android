@@ -39,9 +39,12 @@ public class SetCapButtonBrightnessBroadcastReceiver extends BroadcastReceiver {
      *
      * @param settings the settings from which to retrieve the level of the
      * capacitive button brightness to set.
+     * @param setOptions is an int that will be specified as the "options"
+     * parameter to {@link CapacitiveButtonsBacklightBrightness#set(int, int)}
+     * when invoked.
      * @throws NullPointerException if settings==null.
      */
-    public void doSetCapButtonBrightness(Settings settings) {
+    public void doSetCapButtonBrightness(Settings settings, int setOptions) {
         if (settings == null) {
             throw new NullPointerException("settings==null");
         }
@@ -54,7 +57,7 @@ public class SetCapButtonBrightnessBroadcastReceiver extends BroadcastReceiver {
 
             if (buttons != null) {
                 try {
-                    buttons.set(level);
+                    buttons.set(level, setOptions);
                 } catch (final Exception e) {
                     Log.e(Constants.LOG_TAG, "unable to set capacitive button "
                         + "brightness on boot in " + this.getClass().getName(),
@@ -67,47 +70,39 @@ public class SetCapButtonBrightnessBroadcastReceiver extends BroadcastReceiver {
     /**
      * Runs this broadcast receiver. This method first gets the Settings object,
      * then specifies it along with the given intent to
-     * {@link #shouldRun(Intent, Settings)}. If that returns true then the
-     * settings are in turn specified to
-     * {@link #doSetCapButtonBrightness(Settings)}.
      */
     @Override
     public void onReceive(Context context, Intent intent) {
-        final Settings settings = new Settings(context);
-        if (shouldRun(intent, settings)) {
-            this.doSetCapButtonBrightness(settings);
-        }
-    }
+        Log.i(Constants.LOG_TAG,
+            "SetCapButtonBrightnessBroadcastReceiver.onReceive() " + "action="
+                + intent.getAction());
 
-    /**
-     * Determines whether or not the capacitive button brightness should be set
-     * by this broadcast receiver based on the given Intent and settings.
-     * <p>
-     * If the action of the given intent is {@link Intent#ACTION_BOOT_COMPLETED}
-     * then this method will return false if the
-     * {@link Settings#isSetBrightnessOnBootEnabled()} return false. Returns
-     * true under all other conditions.
-     *
-     * @param intent the intent to check.
-     * @param settings the settings to check.
-     * @return true if the capacitive button brightness should be set by this
-     * broadcast receiver, false otherwise.
-     * @throws NullPointerException if any argument is null.
-     */
-    public static boolean shouldRun(Intent intent, Settings settings) {
-        if (intent == null) {
-            throw new NullPointerException("intent==null");
-        } else if (settings == null) {
-            throw new NullPointerException("settings==null");
-        }
+        final Settings settings = new Settings(context);
 
         final String action = intent.getAction();
         final boolean shouldRun;
         if (action != null && action.equals(Intent.ACTION_BOOT_COMPLETED)) {
             shouldRun = settings.isSetBrightnessOnBootEnabled();
+
+            // start the service to respond to the screen turning on
+            final Intent serviceIntent = new Intent();
+            serviceIntent.setClass(context, ScreenPowerOnService.class);
+            context.startService(serviceIntent);
         } else {
             shouldRun = true;
         }
-        return shouldRun;
+
+        if (shouldRun) {
+            final int setOptions;
+            if (action != null && action.equals(Intent.ACTION_SCREEN_ON)) {
+                setOptions =
+                    CapacitiveButtonsBacklightBrightness.OPTION_SCREEN_ON;
+            } else {
+                setOptions = 0;
+            }
+
+            this.doSetCapButtonBrightness(settings, setOptions);
+        }
     }
+
 }

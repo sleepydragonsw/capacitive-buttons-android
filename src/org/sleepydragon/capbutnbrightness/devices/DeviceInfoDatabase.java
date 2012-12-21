@@ -37,12 +37,11 @@ public class DeviceInfoDatabase {
     public DeviceInfoDatabase() {
         // create a list containing information about known devices
         final Collection<DeviceInfo> list = new ArrayList<DeviceInfo>();
-        list.add(new DeviceInfo("evita", "HTC One X",
-            new HtcOneXS4CapacitiveButtonsBacklightBrightness()));
+        list.add(new DeviceInfo("evita", "HTC One X", new HtcOneXEvita()));
         list.add(new DeviceInfo("endeavoru", "HTC One X",
-            new HtcOneXTegra3CapacitiveButtonsBacklightBrightness()));
-        list.add(new DeviceInfo("evitareul", "HTC One X+",
-            new HtcOneXTegra3CapacitiveButtonsBacklightBrightness()));
+            new HtcOneXEndeavoru()));
+        list.add(new DeviceInfo("evitareul", "HTC One X+", new HtcOneXPlus()));
+        list.add(new DeviceInfo("enrc2b", "HTC One X+", new HtcOneXPlus()));
 
         // create a sentinel object that represents an unknown device
         this.unknownDeviceInfo = new UnknownDeviceInfo();

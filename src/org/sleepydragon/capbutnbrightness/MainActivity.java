@@ -19,8 +19,7 @@ package org.sleepydragon.capbutnbrightness;
 import org.sleepydragon.capbutnbrightness.devices.CapacitiveButtonsBacklightBrightness;
 import org.sleepydragon.capbutnbrightness.devices.DeviceInfo;
 import org.sleepydragon.capbutnbrightness.devices.DeviceInfoDatabase;
-import org.sleepydragon.capbutnbrightness.devices.FileCapacitiveButtonsBacklightBrightness.NotRootedException;
-import org.sleepydragon.capbutnbrightness.devices.FileCapacitiveButtonsBacklightBrightness.RootAccessDeniedException;
+import org.sleepydragon.capbutnbrightness.devices.RootHelper;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -38,16 +37,14 @@ public class MainActivity extends Activity implements View.OnClickListener {
     private Integer getBrightnessLevel(View view) {
         assert view != null;
 
-        final int defaultDimBrightness;
+        final int dimBrightness;
         final CapacitiveButtonsBacklightBrightness buttons = this.buttons;
         if (buttons != null) {
-            defaultDimBrightness = buttons.getDefaultDimLevel();
+            dimBrightness = buttons.getDefaultDimLevel();
         } else {
             // just choose some arbitrary value in the range [0,100]
-            defaultDimBrightness = 50;
+            dimBrightness = 50;
         }
-        final int dimBrightness =
-            this.settings.getDimLevel(defaultDimBrightness);
 
         final int id = view.getId();
         switch (id) {
@@ -75,7 +72,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
                 if (level == null) {
                     buttons.setDefault();
                 } else {
-                    buttons.set(level);
+                    buttons.set(level, 0);
                 }
             } catch (final CapacitiveButtonsBacklightBrightness.SetException e) {
                 this.showError(e);
@@ -100,6 +97,11 @@ public class MainActivity extends Activity implements View.OnClickListener {
         final DeviceInfoDatabase devices = new DeviceInfoDatabase();
         final DeviceInfo device = devices.getForCurrentDevice();
         this.buttons = device.getCapacitiveButtonsBacklightBrightness();
+
+        // start the service to respond to the screen turning on
+        final Intent serviceIntent = new Intent();
+        serviceIntent.setClass(this, ScreenPowerOnService.class);
+        this.startService(serviceIntent);
 
         this.settings = new Settings(this);
     }
@@ -128,11 +130,11 @@ public class MainActivity extends Activity implements View.OnClickListener {
     private void showError(CapacitiveButtonsBacklightBrightness.SetException e) {
         assert e != null;
         final String message;
-        if (e instanceof NotRootedException) {
+        if (e instanceof RootHelper.NotRootedException) {
             message =
                 "This device is not rooted; it must be rooted in order for "
                     + "this application to function correctly";
-        } else if (e instanceof RootAccessDeniedException) {
+        } else if (e instanceof RootHelper.RootAccessDeniedException) {
             message =
                 "Root access was denied; this application requires root "
                     + " permissions in order to function correctly";

@@ -22,6 +22,16 @@ package org.sleepydragon.capbutnbrightness.devices;
 public interface CapacitiveButtonsBacklightBrightness {
 
     /**
+     * Option to set() which indicates that the method is being invoked in
+     * response to the screen turning on. In this case, the method may perform
+     * some optimizations compared to when the brightness is set normally that
+     * only apply in this situation.
+     *
+     * @see #set(int, int)
+     */
+    public static final int OPTION_SCREEN_ON = 0x00000001;
+
+    /**
      * Returns the default brightness level to use when the "dim" option is
      * selected by a user.
      *
@@ -49,13 +59,16 @@ public interface CapacitiveButtonsBacklightBrightness {
      * @param level a value between 0 and 100, inclusive, where 0 is completely
      * off, 100 is completely on, and any value in between is on but not with
      * full brightness.
+     * @param options must be a combination of the OPTION_ constants defined in
+     * this class, which influences the behaviour of the method; if none of the
+     * options apply, specify 0.
      * @throws SetException if setting the brightness of the capacitive buttons
      * backlight fails.
      * @throws IllegalArgumentException if the given level is less than 0 or
      * greater than 100.
      * @throws UnsupportedOperationException if isSupported() returns false.
      */
-    public void set(int level) throws SetException;
+    public void set(int level, int options) throws SetException;
 
     /**
      * Sets the brightness of the capacitive buttons backlight to its default
