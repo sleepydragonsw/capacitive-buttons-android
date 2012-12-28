@@ -1,5 +1,15 @@
 <resources>
 
     <string name="debug_app_version">Application Version: %s</string>
+    <string name="debug_build_board">Build.BOARD: %s</string>
+    <string name="debug_build_bootloader">Build.BOOTLOADER: %s</string>
+    <string name="debug_build_brand">Build.BRAND: %s</string>
+    <string name="debug_build_device">Build.DEVICE: %s</string>
+    <string name="debug_build_display">Build.DISPLAY: %s</string>
+    <string name="debug_build_hardware">Build.HARDWARE: %s</string>
+    <string name="debug_build_manufacturer">Build.MANUFACTURER: %s</string>
+    <string name="debug_build_model">Build.MODEL: %s</string>
+    <string name="debug_build_product">Build.PRODUCT: %s</string>
+    <string name="debug_build_version_release">Build.VERSION.RELEASE: %s</string>
 
 </resources>

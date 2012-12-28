@@ -25,6 +25,7 @@ import org.sleepydragon.capbutnbrightness.R;
 import org.sleepydragon.capbutnbrightness.devices.DeviceInfo;
 
 import android.content.Context;
+import android.os.Build;
 
 /**
  * An iterator that produces strings whose values are lines that can be written
@@ -70,6 +71,7 @@ public class DebugLinesGenerator implements Iterable<String>, Iterator<String> {
     private Section[] getSections() {
         final List<Section> list = new ArrayList<Section>();
         list.add(new AppVersionSection());
+        list.add(new BuildSection());
         final Section[] array = new Section[list.size()];
         return list.toArray(array);
     }
@@ -144,6 +146,49 @@ public class DebugLinesGenerator implements Iterable<String>, Iterator<String> {
                 DebugLinesGenerator.this.context.getString(
                     R.string.debug_app_version, version);
             return new String[] { line };
+        }
+
+    }
+
+    private class BuildSection implements Section {
+
+        public String[] getLines() {
+            final Context context = DebugLinesGenerator.this.context;
+            final String boardValue = Build.BOARD;
+            final String board =
+                context.getString(R.string.debug_build_board, boardValue);
+            final String bootloaderValue = Build.BOOTLOADER;
+            final String bootloader =
+                context.getString(R.string.debug_build_bootloader,
+                    bootloaderValue);
+            final String brandValue = Build.BRAND;
+            final String brand =
+                context.getString(R.string.debug_build_brand, brandValue);
+            final String deviceValue = Build.DEVICE;
+            final String device =
+                context.getString(R.string.debug_build_device, deviceValue);
+            final String hardwareValue = Build.HARDWARE;
+            final String hardware =
+                context.getString(R.string.debug_build_hardware, hardwareValue);
+            final String displayValue = Build.DISPLAY;
+            final String display =
+                context.getString(R.string.debug_build_display, displayValue);
+            final String manufacturerValue = Build.MANUFACTURER;
+            final String manufacturer =
+                context.getString(R.string.debug_build_manufacturer,
+                    manufacturerValue);
+            final String modelValue = Build.MODEL;
+            final String model =
+                context.getString(R.string.debug_build_model, modelValue);
+            final String productValue = Build.PRODUCT;
+            final String product =
+                context.getString(R.string.debug_build_product, productValue);
+            final String versionValue = Build.VERSION.RELEASE;
+            final String version =
+                context.getString(R.string.debug_build_version_release,
+                    versionValue);
+            return new String[] { board, bootloader, brand, device, display,
+                hardware, manufacturer, model, product, version };
         }
 
     }
