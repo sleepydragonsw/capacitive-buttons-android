@@ -9,5 +9,6 @@
     <string name="pref_boot_title">Set On Boot</string>
     <string name="pref_boot_summary">Set the brightness of the capacitive
         buttons when the device boots</string>
+    <string name="menu_save_to_file">Save To File</string>
 
 </resources>

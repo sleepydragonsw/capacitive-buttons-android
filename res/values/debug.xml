@@ -1,0 +1,5 @@
+<resources>
+
+    <string name="debug_app_version">Application Version: %s</string>
+
+</resources>

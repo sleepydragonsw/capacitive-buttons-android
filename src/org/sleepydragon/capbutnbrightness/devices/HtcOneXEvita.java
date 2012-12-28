@@ -16,6 +16,9 @@
  */
 package org.sleepydragon.capbutnbrightness.devices;
 
+import org.sleepydragon.capbutnbrightness.debug.DebugFilesProvider.FileContents;
+import org.sleepydragon.capbutnbrightness.debug.DebugFilesProvider.FileInfo;
+
 /**
  * A specialization of CapacitiveButtonsBacklightBrightness for the HTC One X.
  */
@@ -25,8 +28,18 @@ public class HtcOneXEvita implements CapacitiveButtonsBacklightBrightness {
         "/sys/class/leds/button-backlight";
     public static final String CURRENTS_PATH = BUTTONS_BACKLIGHT_DIR
         + "/currents";
+    public static final String BRIGHTNESS_PATH = BUTTONS_BACKLIGHT_DIR
+        + "/brightness";
+    public static final String LUT_COEFFICIENT_PATH = BUTTONS_BACKLIGHT_DIR
+        + "/lut_coefficient";
 
     public HtcOneXEvita() {
+    }
+
+    public FileInfo[] getDebugFiles() {
+        return new FileInfo[] { new FileInfo(CURRENTS_PATH, FileContents.INT),
+            new FileInfo(BRIGHTNESS_PATH, FileContents.INT),
+            new FileInfo(LUT_COEFFICIENT_PATH, FileContents.INT), };
     }
 
     public int getDefaultDimLevel() {
