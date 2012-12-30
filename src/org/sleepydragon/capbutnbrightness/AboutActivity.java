@@ -16,15 +16,11 @@
  */
 package org.sleepydragon.capbutnbrightness;
 
-import org.sleepydragon.capbutnbrightness.debug.DebugActivity;
 import org.sleepydragon.capbutnbrightness.devices.DeviceInfo;
 import org.sleepydragon.capbutnbrightness.devices.DeviceInfoDatabase;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.widget.TextView;
 
 public class AboutActivity extends Activity {
@@ -40,24 +36,6 @@ public class AboutActivity extends Activity {
         final TextView deviceNameTxt =
             (TextView) this.findViewById(R.id.txtDeviceName);
         deviceNameTxt.setText(" " + deviceName);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        this.getMenuInflater().inflate(R.menu.activity_about, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        final int id = item.getItemId();
-        switch (id) {
-            case R.id.menu_debug:
-                this.startActivity(new Intent(this, DebugActivity.class));
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
     }
 
 }

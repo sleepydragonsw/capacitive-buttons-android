@@ -12,5 +12,8 @@
     <string name="menu_copy">Copy</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
+    <string name="pref_debug_title">Debug Information</string>
+    <string name="pref_debug_summary">Show information that should be submitted
+        along with bug reports to facilitate debugging of issues</string>
 
 </resources>
