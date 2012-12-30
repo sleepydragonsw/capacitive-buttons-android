@@ -16,13 +16,13 @@
  */
 package org.sleepydragon.capbutnbrightness.devices;
 
-import org.sleepydragon.capbutnbrightness.debug.DebugFilesProvider.FileContents;
-import org.sleepydragon.capbutnbrightness.debug.DebugFilesProvider.FileInfo;
+import org.sleepydragon.capbutnbrightness.debug.DebugFilesProvider;
 
 /**
  * A specialization of CapacitiveButtonsBacklightBrightness for the HTC One X.
  */
-public class HtcOneXPlus implements CapacitiveButtonsBacklightBrightness {
+public class HtcOneXPlus implements CapacitiveButtonsBacklightBrightness,
+        DebugFilesProvider {
 
     public static final String BUTTONS_BACKLIGHT_DIR =
         "/sys/class/leds/button-backlight";
