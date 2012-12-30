@@ -1,15 +1,22 @@
 <resources>
 
     <string name="debug_app_version">Application Version: %s</string>
-    <string name="debug_build_board">Build.BOARD: %s</string>
     <string name="debug_build_bootloader">Build.BOOTLOADER: %s</string>
-    <string name="debug_build_brand">Build.BRAND: %s</string>
     <string name="debug_build_device">Build.DEVICE: %s</string>
     <string name="debug_build_display">Build.DISPLAY: %s</string>
-    <string name="debug_build_hardware">Build.HARDWARE: %s</string>
     <string name="debug_build_manufacturer">Build.MANUFACTURER: %s</string>
     <string name="debug_build_model">Build.MODEL: %s</string>
     <string name="debug_build_product">Build.PRODUCT: %s</string>
     <string name="debug_build_version_release">Build.VERSION.RELEASE: %s</string>
+    <string name="debug_device_name">Detected Device: %s</string>
+    <string name="debug_device_supported">Supports Setting Capacitive Buttons Backlight Brightness: %s</string>
+    <string name="debug_device_possible">Setting Capacitive Buttons Backlight Brightness Possible: %s</string>
+    <string name="debug_file_exists">File Exists: %s</string>
+    <string name="debug_file_permissions">File Permissions: %s</string>
+    <string name="debug_file_contents">File Contents: %s</string>
+    <string name="debug_file_readonly">Read-Only</string>
+    <string name="debug_file_writeonly">Write-Only</string>
+    <string name="debug_file_readwrite">Read/Write</string>
+    <string name="debug_file_noperms">Neither Readable Nor Writable</string>
 
 </resources>

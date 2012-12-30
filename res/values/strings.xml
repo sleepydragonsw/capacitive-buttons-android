@@ -10,5 +10,7 @@
     <string name="pref_boot_summary">Set the brightness of the capacitive
         buttons when the device boots</string>
     <string name="menu_save_to_file">Save To File</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
 
 </resources>
