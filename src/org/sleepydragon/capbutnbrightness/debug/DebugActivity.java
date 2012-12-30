@@ -21,12 +21,24 @@ import org.sleepydragon.capbutnbrightness.devices.DeviceInfo;
 import org.sleepydragon.capbutnbrightness.devices.DeviceInfoDatabase;
 
 import android.app.Activity;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
 public class DebugActivity extends Activity {
+
+    private String debugText;
+
+    private void copyTextToClipboard() {
+        final Object service = this.getSystemService(CLIPBOARD_SERVICE);
+        final ClipboardManager clipboard = (ClipboardManager) service;
+        final ClipData clipData =
+            ClipData.newPlainText("Debug Information", this.debugText);
+        clipboard.setPrimaryClip(clipData);
+    }
 
     private String getDebugText() {
         final DeviceInfoDatabase db = new DeviceInfoDatabase();
@@ -48,6 +60,7 @@ public class DebugActivity extends Activity {
         final TextView textView =
             (TextView) this.findViewById(R.id.txtDebugText);
         textView.setText(debugText);
+        this.debugText = debugText;
     }
 
     @Override
@@ -60,11 +73,11 @@ public class DebugActivity extends Activity {
     public boolean onOptionsItemSelected(MenuItem item) {
         final int id = item.getItemId();
         switch (id) {
-            case R.id.menu_save_to_file:
+            case R.id.menu_copy:
+                this.copyTextToClipboard();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
-
 }

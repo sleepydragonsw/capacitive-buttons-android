@@ -135,7 +135,7 @@ public class DebugLinesGenerator implements Iterable<String>, Iterator<String> {
                 final String[] lines = section.getLines();
                 this.curSection = lines;
                 this.curSectionIndex = 0;
-                next = ""; // put empty line in between sections
+                next = ""; // insert blank line between sections
             }
 
             break;
