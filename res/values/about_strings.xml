@@ -1,6 +1,5 @@
 <resources>
 
-    <string name="about_author">By: Denver Coneybeare &lt;denver@sleepydragon.org&gt;</string>
     <string name="about_source_location">The source code is freely available from https://code.google.com/p/hox-cap-butn-brightness</string>
     <string name="about_device_name">Detected device: %s</string>
     <string name="about_license1">
