@@ -19,7 +19,6 @@ package org.sleepydragon.capbutnbrightness;
 import android.app.Activity;
 import android.os.Bundle;
 import android.preference.PreferenceFragment;
-import android.preference.PreferenceManager;
 
 /**
  * An activity that displays application credits to the user.
