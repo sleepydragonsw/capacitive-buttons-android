@@ -27,6 +27,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class DebugActivity extends Activity {
 
@@ -38,6 +39,7 @@ public class DebugActivity extends Activity {
         final ClipData clipData =
             ClipData.newPlainText("Debug Information", this.debugText);
         clipboard.setPrimaryClip(clipData);
+        Toast.makeText(this, R.string.debug_copied, Toast.LENGTH_SHORT).show();
     }
 
     private String getDebugText() {

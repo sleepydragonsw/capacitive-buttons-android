@@ -18,5 +18,6 @@
     <string name="debug_file_writeonly">Write-Only</string>
     <string name="debug_file_readwrite">Read/Write</string>
     <string name="debug_file_noperms">Neither Readable Nor Writable</string>
+    <string name="debug_copied">Text Copied to Clipboard</string>
 
 </resources>
