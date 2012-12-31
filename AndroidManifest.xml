@@ -24,6 +24,7 @@
         <activity android:name=".AboutActivity" />
         <activity android:name=".debug.DebugActivity" />
         <activity android:name=".SettingsActivity" />
+        <activity android:name=".CreditsActivity" />
 
         <receiver android:name=".SetCapButtonBrightnessBroadcastReceiver">
             <intent-filter>

@@ -15,65 +15,73 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/app_version" />
-    
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/about_author" />
-    
+
 	<View
 	    android:layout_width="fill_parent"
 	    android:layout_height="1dip"
 	    android:background="#000000"
 	    android:layout_marginTop="10dip"
 	    android:layout_marginBottom="10dip" />
-		    	    
+
 	<TextView
 	    android:layout_width="wrap_content"
 	    android:layout_height="wrap_content"
 	    android:layout_marginBottom="10dip"
 	    android:text="@string/about_license1" />
-		    	    
+
 	<TextView
 	    android:layout_width="wrap_content"
 	    android:layout_height="wrap_content"
 	    android:layout_marginBottom="10dip"
 	    android:text="@string/about_license2" />
-		    	    
+
 	<TextView
 	    android:layout_width="wrap_content"
 	    android:layout_height="wrap_content"
 	    android:text="@string/about_license3" />
-	
+
     <View
         android:layout_width="fill_parent"
         android:layout_height="1dip"
         android:background="#000000"
         android:layout_marginTop="10dip"
         android:layout_marginBottom="10dip" />
-	
+
 	<TextView
 	    android:layout_width="wrap_content"
 	    android:layout_height="wrap_content"
 	    android:text="@string/about_source_location" />
 
-	<LinearLayout
-	    android:layout_width="match_parent"
-	    android:layout_height="match_parent"
-	    android:orientation="horizontal"
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dip"
+        android:background="#000000"
         android:layout_marginTop="10dip"
-        android:layout_marginBottom="10dip">
+        android:layout_marginBottom="10dip" />
 
-       <TextView
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:text="@string/about_device_name" />
+	<TextView
+         android:id="@+id/txtDeviceName"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:text="@string/about_device_name" />
 
-       <TextView
-            android:id="@+id/txtDeviceName"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content" />
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dip"
+        android:background="#000000"
+        android:layout_marginTop="10dip"
+        android:layout_marginBottom="10dip" />
 
-	</LinearLayout>
+	<Button
+        android:id="@+id/btnCredits"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/btn_credits"
+        android:gravity="center" />
 
 </LinearLayout>

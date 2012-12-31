@@ -20,10 +20,22 @@ import org.sleepydragon.capbutnbrightness.devices.DeviceInfo;
 import org.sleepydragon.capbutnbrightness.devices.DeviceInfoDatabase;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.TextView;
 
-public class AboutActivity extends Activity {
+public class AboutActivity extends Activity implements OnClickListener {
+
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.btnCredits:
+                final Intent intent = new Intent(this, CreditsActivity.class);
+                this.startActivity(intent);
+                break;
+        }
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -35,7 +47,11 @@ public class AboutActivity extends Activity {
         final String deviceName = device.getDisplayName();
         final TextView deviceNameTxt =
             (TextView) this.findViewById(R.id.txtDeviceName);
-        deviceNameTxt.setText(" " + deviceName);
-    }
+        final String deviceNameViewText =
+            this.getString(R.string.about_device_name, deviceName);
+        deviceNameTxt.setText(deviceNameViewText);
 
+        final View creditsBtn = this.findViewById(R.id.btnCredits);
+        creditsBtn.setOnClickListener(this);
+    }
 }

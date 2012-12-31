@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceScreen
+        android:title="Denver Coneybeare"
+        android:summary="Primary Application Developer\nhttp://www.sleepydragon.org">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:data="http://www.sleepydragon.org" />
+    </PreferenceScreen>
+    <PreferenceScreen
+        android:title="lesscro"
+        android:summary="Application Icon\nhttp://www.rd-graphisme.com">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:data="http://www.rd-graphisme.com" />
+    </PreferenceScreen>
+    <PreferenceScreen
+        android:title="xda-develeopers Forum Users"
+        android:summary="Tonnes of help and great ideas for the app!\nhttp://forum.xda-developers.com">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:data="http://forum.xda-developers.com/showthread.php?t=1912216" />
+    </PreferenceScreen>
+</PreferenceScreen>
