@@ -9,6 +9,13 @@
             android:data="http://www.sleepydragon.org" />
     </PreferenceScreen>
     <PreferenceScreen
+        android:title="gridlock489"
+        android:summary="Hi-res Main UI Images\nhttp://forum.xda-developers.com">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:data="http://forum.xda-developers.com/member.php?u=4746227" />
+    </PreferenceScreen>
+    <PreferenceScreen
         android:title="lesscro"
         android:summary="Application Icon\nhttp://www.rd-graphisme.com">
         <intent
