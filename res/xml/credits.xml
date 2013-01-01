@@ -2,7 +2,7 @@
 
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     <PreferenceScreen
-        android:title="Denver Coneybeare"
+        android:title="denversc"
         android:summary="Primary Application Developer\nhttp://www.sleepydragon.org">
         <intent
             android:action="android.intent.action.VIEW"
