@@ -14,25 +14,25 @@
         android:label="@string/app_name"
         android:theme="@android:style/Theme.Holo" >
         <activity
-            android:name=".MainActivity"
+            android:name="org.sleepydragon.capbutnbrightness.MainActivity"
             android:label="@string/title_activity_main" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".AboutActivity" />
-        <activity android:name=".debug.DebugActivity" />
-        <activity android:name=".SettingsActivity" />
-        <activity android:name=".CreditsActivity" />
+        <activity android:name="org.sleepydragon.capbutnbrightness.AboutActivity" />
+        <activity android:name="org.sleepydragon.capbutnbrightness.debug.DebugActivity" />
+        <activity android:name="org.sleepydragon.capbutnbrightness.SettingsActivity" />
+        <activity android:name="org.sleepydragon.capbutnbrightness.CreditsActivity" />
 
-        <receiver android:name=".SetCapButtonBrightnessBroadcastReceiver">
+        <receiver android:name="org.sleepydragon.capbutnbrightness.SetCapButtonBrightnessBroadcastReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
         <service
-            android:name=".ScreenPowerOnService"
+            android:name="org.sleepydragon.capbutnbrightness.ScreenPowerOnService"
             android:exported="false"
         />
     </application>
