@@ -23,7 +23,7 @@
             android:data="http://www.rd-graphisme.com" />
     </PreferenceScreen>
     <PreferenceScreen
-        android:title="xda-develeopers Forum Users"
+        android:title="xda-developers Forum Users"
         android:summary="Tonnes of help and great ideas for the app!\nhttp://forum.xda-developers.com">
         <intent
             android:action="android.intent.action.VIEW"
