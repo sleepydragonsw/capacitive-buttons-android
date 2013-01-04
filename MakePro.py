@@ -45,7 +45,7 @@ class FixRImportFilter(FileFilter):
 
 class VersionStringFilter(FileFilter):
     def __init__(self):
-        FileFilter.__init__(self, r"\s*<string name=\"app_version\">[^<]*()</string>", " Pro")
+        FileFilter.__init__(self, r"\s*<string name=\"app_version_display\">[^<]*()</string>", " Pro")
 
 class ImportNewRFilter(FileFilter):
     LINE_PREFIX = "package org.sleepydragon.capbutnbrightness;"
