@@ -32,6 +32,7 @@ import org.sleepydragon.capbutnbrightness.devices.DeviceInfo;
 
 import android.content.Context;
 import android.os.Build;
+import android.os.Process;
 
 /**
  * An iterator that produces strings whose values are lines that can be written
@@ -79,6 +80,7 @@ public class DebugLinesGenerator implements Iterable<String>, Iterator<String> {
         list.add(new AppVersionSection());
         list.add(new DeviceSection());
         list.add(new BuildSection());
+        list.add(new MiscSection());
         final Section[] array = new Section[list.size()];
         return list.toArray(array);
     }
@@ -328,6 +330,18 @@ public class DebugLinesGenerator implements Iterable<String>, Iterator<String> {
 
             final String[] array = new String[lines.size()];
             return lines.toArray(array);
+        }
+
+    }
+
+    private class MiscSection implements Section {
+
+        public String[] getLines() {
+            final Context context = DebugLinesGenerator.this.context;
+            final int uidValue = Process.myUid();
+            final String uid =
+                context.getString(R.string.debug_process_uid, uidValue);
+            return new String[] { uid };
         }
 
     }
