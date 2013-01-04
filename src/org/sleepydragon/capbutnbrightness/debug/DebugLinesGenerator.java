@@ -149,7 +149,7 @@ public class DebugLinesGenerator implements Iterable<String>, Iterator<String> {
         public String[] getLines() {
             final String version =
                 DebugLinesGenerator.this.context
-                    .getString(R.string.app_version);
+                    .getString(R.string.app_version_display);
             final String line =
                 DebugLinesGenerator.this.context.getString(
                     R.string.debug_app_version, version);
