@@ -5,3 +5,4 @@ gen/
 *.swp
 .classpath
 .project
+local.properties
