@@ -3,3 +3,5 @@ syntax: glob
 bin/
 gen/
 *.swp
+.classpath
+.project
