@@ -2,6 +2,8 @@ syntax: glob
 
 CapButnBrightness/bin/
 CapButnBrightness/gen/
+CapButnBrightnessTest/bin/
+CapButnBrightnessTest/gen/
 *.swp
 .classpath
 .project
