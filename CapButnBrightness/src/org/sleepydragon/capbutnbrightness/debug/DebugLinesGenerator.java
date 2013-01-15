@@ -40,7 +40,7 @@ import android.os.Process;
  * this application.
  * <p>
  * This class is <em>NOT</em> thread safe. Concurrent access to instance of this
- * class produced undefined behaviour, and may corrupt internal data structures.
+ * class produces undefined behaviour, and may corrupt internal data structures.
  * External synchronization is required if an instance of this class will be
  * accessed concurrently by multiple threads.
  */
