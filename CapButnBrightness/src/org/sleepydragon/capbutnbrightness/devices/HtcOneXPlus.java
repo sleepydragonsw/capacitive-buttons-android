@@ -95,10 +95,8 @@ public class HtcOneXPlus implements CapacitiveButtonsBacklightBrightness,
                 }
             }
             FileHelper.writeToFile(1, BRIGHTNESS_PATH);
-            if (!inResponseToScreenOn || dim) {
-                if (currentsFileExists) {
-                    FileHelper.writeToFile(currents, CURRENTS_PATH);
-                }
+            if (currentsFileExists) {
+                FileHelper.writeToFile(currents, CURRENTS_PATH);
             }
         }
         RootHelper.chmod("444", BRIGHTNESS_PATH);
