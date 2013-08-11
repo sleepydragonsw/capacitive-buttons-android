@@ -93,4 +93,19 @@ public interface CapacitiveButtonsBacklightBrightness {
             super(message);
         }
     }
+
+    /**
+     * Exception thrown if setting the brightness of the capacitive buttons
+     * backlight fails due to a "dim" brightness being requested (ie. neither
+     * "bright" nor "off") and the device does not support that brightness.
+     */
+    public class DimBrightnessNotSupportedException extends SetException {
+
+        private static final long serialVersionUID = 7551491163530984762L;
+
+        public DimBrightnessNotSupportedException(String message) {
+            super(message);
+        }
+    }
+
 }

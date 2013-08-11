@@ -138,6 +138,10 @@ public class MainActivity extends Activity implements View.OnClickListener {
             message =
                 "Root access was denied; this application requires root "
                     + " permissions in order to function correctly";
+        } else if (e instanceof CapacitiveButtonsBacklightBrightness.DimBrightnessNotSupportedException) {
+            message =
+                "This device, ROM, or kernel does not support setting the "
+                    + "brigtness to \"dim\": " + e.getMessage();
         } else {
             message = e.getMessage();
         }

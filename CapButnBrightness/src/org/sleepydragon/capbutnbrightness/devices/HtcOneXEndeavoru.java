@@ -16,6 +16,8 @@
  */
 package org.sleepydragon.capbutnbrightness.devices;
 
+import java.io.File;
+
 import org.sleepydragon.capbutnbrightness.debug.DebugFilesProvider;
 
 /**
@@ -47,9 +49,8 @@ public class HtcOneXEndeavoru implements CapacitiveButtonsBacklightBrightness,
     }
 
     public boolean isSupported() {
-        final boolean cExists = FileHelper.fileExists(CURRENTS_PATH);
         final boolean bExists = FileHelper.fileExists(BRIGHTNESS_PATH);
-        final boolean supported = (cExists && bExists);
+        final boolean supported = bExists;
         return supported;
     }
 
@@ -69,31 +70,48 @@ public class HtcOneXEndeavoru implements CapacitiveButtonsBacklightBrightness,
         RootHelper.verifyRooted();
         RootHelper.verifyRootAccessGranted();
 
+        final boolean currentsFileExists = new File(CURRENTS_PATH).isFile();
+        final boolean dim = (level != 100);
+        if (dim && ! currentsFileExists) {
+            throw new DimBrightnessNotSupportedException("dim is not supported");
+        }
+        if (currentsFileExists) {
+            RootHelper.chmod("666", CURRENTS_PATH);
+        }
         RootHelper.chmod("666", BRIGHTNESS_PATH);
-        RootHelper.chmod("666", CURRENTS_PATH);
 
         final boolean backlightOn = (level != 0);
         if (!backlightOn) {
             FileHelper.writeToFile(0, BRIGHTNESS_PATH);
-            FileHelper.writeToFile(0, CURRENTS_PATH);
+            if (currentsFileExists) {
+                FileHelper.writeToFile(0, CURRENTS_PATH);
+            }
         } else {
-            final boolean dim = (level != 100);
             final int currents = dim ? 1 : 3;
             if (!inResponseToScreenOn || dim) {
-                FileHelper.writeToFile(currents, CURRENTS_PATH);
+                if (currentsFileExists) {
+                    FileHelper.writeToFile(currents, CURRENTS_PATH);
+                }
             }
             FileHelper.writeToFile(1, BRIGHTNESS_PATH);
             if (!inResponseToScreenOn || dim) {
-                FileHelper.writeToFile(currents, CURRENTS_PATH);
+                if (currentsFileExists) {
+                    FileHelper.writeToFile(currents, CURRENTS_PATH);
+                }
             }
         }
         RootHelper.chmod("444", BRIGHTNESS_PATH);
-        RootHelper.chmod("444", CURRENTS_PATH);
+        if (currentsFileExists) {
+            RootHelper.chmod("444", CURRENTS_PATH);
+        }
     }
 
     public void setDefault() throws SetException {
         this.set(100, 0);
-        RootHelper.chmod("644", CURRENTS_PATH);
+        final boolean currentsFileExists = new File(CURRENTS_PATH).isFile();
+        if (currentsFileExists) {
+            RootHelper.chmod("644", CURRENTS_PATH);
+        }
         RootHelper.chmod("644", BRIGHTNESS_PATH);
     }
 }
