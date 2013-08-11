@@ -38,10 +38,15 @@ public class ScreenPowerOnService extends Service {
 
     @Override
     public void onCreate() {
-        final IntentFilter filter = new IntentFilter(Intent.ACTION_SCREEN_ON);
-        final BroadcastReceiver recvr =
+        final IntentFilter onFilter = new IntentFilter(Intent.ACTION_SCREEN_ON);
+        final BroadcastReceiver onRecvr =
             new SetCapButtonBrightnessBroadcastReceiver();
-        this.registerReceiver(recvr, filter);
+        this.registerReceiver(onRecvr, onFilter);
+
+        final IntentFilter filter = new IntentFilter(Intent.ACTION_SCREEN_OFF);
+        final BroadcastReceiver offRecvr =
+                new SetCapButtonBrightnessBroadcastReceiver();
+        this.registerReceiver(offRecvr, filter);
     }
 
     @Override

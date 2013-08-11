@@ -44,25 +44,23 @@ public class SetCapButtonBrightnessBroadcastReceiver extends BroadcastReceiver {
      * when invoked.
      * @throws NullPointerException if settings==null.
      */
-    public void doSetCapButtonBrightness(Settings settings, int setOptions) {
+    public void doSetCapButtonBrightness(Settings settings, int setOptions,
+            int level) {
         if (settings == null) {
             throw new NullPointerException("settings==null");
         }
-        final Integer level = settings.getLevel();
-        if (level != null) {
-            final DeviceInfoDatabase db = new DeviceInfoDatabase();
-            final DeviceInfo device = db.getForCurrentDevice();
-            final CapacitiveButtonsBacklightBrightness buttons =
-                device.getCapacitiveButtonsBacklightBrightness();
 
-            if (buttons != null) {
-                try {
-                    buttons.set(level, setOptions);
-                } catch (final Exception e) {
-                    Log.e(Constants.LOG_TAG, "unable to set capacitive button "
-                        + "brightness on boot in " + this.getClass().getName(),
-                        e);
-                }
+        final DeviceInfoDatabase db = new DeviceInfoDatabase();
+        final DeviceInfo device = db.getForCurrentDevice();
+        final CapacitiveButtonsBacklightBrightness buttons =
+            device.getCapacitiveButtonsBacklightBrightness();
+
+        if (buttons != null) {
+            try {
+                buttons.set(level, setOptions);
+            } catch (final Exception e) {
+                Log.e(Constants.LOG_TAG, "unable to set capacitive button "
+                    + "brightness on boot in " + this.getClass().getName(), e);
             }
         }
     }
@@ -78,6 +76,11 @@ public class SetCapButtonBrightnessBroadcastReceiver extends BroadcastReceiver {
                 + intent.getAction());
 
         final Settings settings = new Settings(context);
+
+        final Integer level = settings.getLevel();
+        if (level == null) {
+            return;
+        }
 
         final String action = intent.getAction();
         final boolean shouldRun;
@@ -101,7 +104,14 @@ public class SetCapButtonBrightnessBroadcastReceiver extends BroadcastReceiver {
                 setOptions = 0;
             }
 
-            this.doSetCapButtonBrightness(settings, setOptions);
+            final int levelAsInt;
+            if (action != null && action.equals(Intent.ACTION_SCREEN_OFF)) {
+                levelAsInt = 0;
+            } else {
+                levelAsInt = level.intValue();
+            }
+
+            this.doSetCapButtonBrightness(settings, setOptions, levelAsInt);
         }
     }
 
