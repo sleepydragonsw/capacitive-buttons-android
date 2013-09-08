@@ -1,7 +1,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="org.sleepydragon.capbutnbrightness"
     android:versionCode="11"
-    android:versionName="@string/app_version" >
+    android:versionName="@string/app_version"
+    android:installLocation="internalOnly"
+    >
 
     <uses-sdk
         android:minSdkVersion="14"
