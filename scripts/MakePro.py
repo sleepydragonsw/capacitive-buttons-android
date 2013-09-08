@@ -47,6 +47,14 @@ class VersionStringFilter(FileFilter):
     def __init__(self):
         FileFilter.__init__(self, r"\s*<string name=\"app_version_display\">[^<]*()</string>", " Pro")
 
+class AppNameStringFilter(FileFilter):
+    def __init__(self):
+        FileFilter.__init__(self, r"\s*<string name=\"app_name\">[^<]*()</string>", " Pro")
+
+class AppTitleStringFilter(FileFilter):
+    def __init__(self):
+        FileFilter.__init__(self, r"\s*<string name=\"title_activity_main\">[^<]*()</string>", " Pro")
+
 class ImportNewRFilter(FileFilter):
     LINE_PREFIX = "package org.sleepydragon.capbutnbrightness;"
     def __init__(self):
@@ -64,6 +72,8 @@ class ImportNewRFilter(FileFilter):
 filters = [
     ("AndroidManifest.xml", AndroidManifestFilter()),
     ("res/values/strings.xml", VersionStringFilter()),
+    ("res/values/strings.xml", AppNameStringFilter()),
+    ("res/values/strings.xml", AppTitleStringFilter()),
     ("res/xml/preferences.xml", PrefsXmlFilter()),
     ("src/org/sleepydragon/capbutnbrightness/AboutActivity.java", ImportNewRFilter()),
     ("src/org/sleepydragon/capbutnbrightness/CreditsActivity.java", ImportNewRFilter()),
