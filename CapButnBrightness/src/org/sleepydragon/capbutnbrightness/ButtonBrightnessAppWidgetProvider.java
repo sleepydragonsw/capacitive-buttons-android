@@ -75,6 +75,11 @@ public class ButtonBrightnessAppWidgetProvider extends AppWidgetProvider {
                         "Unable to set brightness in widget", e);
                 }
             }
+
+            // start the service to respond to the screen turning on
+            final Intent serviceIntent = new Intent();
+            serviceIntent.setClass(context, ScreenPowerOnService.class);
+            context.startService(serviceIntent);
         } else {
             super.onReceive(context, intent);
         }
