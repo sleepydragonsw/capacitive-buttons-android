@@ -77,6 +77,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
             } catch (final CapacitiveButtonsBacklightBrightness.SetException e) {
                 this.showError(e);
             }
+            ButtonBrightnessAppWidgetProvider.postUpdateWidgets(this);
         }
     }
 

@@ -36,6 +36,13 @@
             android:name="org.sleepydragon.capbutnbrightness.ScreenPowerOnService"
             android:exported="false"
         />
+        <receiver android:name="ButtonBrightnessAppWidgetProvider" >
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data android:name="android.appwidget.provider"
+                       android:resource="@xml/brightness_appwidget_info" />
+        </receiver>
     </application>
 
 </manifest>
