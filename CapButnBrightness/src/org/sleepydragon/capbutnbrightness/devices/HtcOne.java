@@ -65,7 +65,7 @@ public class HtcOne implements CapacitiveButtonsBacklightBrightness,
             FileHelper.writeToFile(0, CURRENTS_PATH);
         } else {
             final boolean dim = (level != 100);
-            final int currents = dim ? 1 : 3;
+            final int currents = dim ? 3 : 20;
             FileHelper.writeToFile(currents, CURRENTS_PATH);
         }
         RootHelper.chmod("444", CURRENTS_PATH);
