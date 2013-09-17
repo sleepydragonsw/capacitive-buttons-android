@@ -21,9 +21,10 @@ import java.util.concurrent.TimeoutException;
 
 import org.sleepydragon.capbutnbrightness.devices.CapacitiveButtonsBacklightBrightness.SetException;
 
-import com.stericson.RootTools.Command;
 import com.stericson.RootTools.RootTools;
-import com.stericson.RootTools.Shell;
+import com.stericson.RootTools.exceptions.RootDeniedException;
+import com.stericson.RootTools.execution.Command;
+import com.stericson.RootTools.execution.Shell;
 
 /**
  * A helper class for performing operations as root in
@@ -76,6 +77,8 @@ public class RootHelper {
         } catch (final TimeoutException e) {
             throw new SetException("timeout waiting for root shell: "
                 + e.getMessage());
+        } catch (final RootDeniedException e) {
+            throw new SetException("root access denied: " + e.getMessage());
         } catch (final IOException e) {
             throw new SetException("unable to get root shell: "
                 + e.getMessage());
