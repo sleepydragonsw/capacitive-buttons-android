@@ -8,6 +8,7 @@
     <string name="btn_off">Off</string>
     <string name="btn_dim">Dim</string>
     <string name="btn_bright">Bright</string>
+    <string name="btn_upgrade">Upgrade</string>
     <string name="pref_boot_title">Set On Boot</string>
     <string name="pref_boot_summary">Set the brightness of the capacitive
         buttons when the device boots</string>
@@ -17,5 +18,7 @@
     <string name="pref_debug_title">Debug Information</string>
     <string name="pref_debug_summary">Show information that should be submitted
         along with bug reports to facilitate debugging of issues</string>
+    <string name="txt_upgrade_title">Upgrade to Pro version</string>
+    <string name="txt_upgrade_description">to get new features immediately</string>
 
 </resources>

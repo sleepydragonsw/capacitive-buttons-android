@@ -24,6 +24,7 @@ import org.sleepydragon.capbutnbrightness.devices.RootHelper;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -62,6 +63,14 @@ public class MainActivity extends Activity implements View.OnClickListener {
     }
 
     public void onClick(View view) {
+        if (view.getId() == R.id.btnUpgrade) {
+            this.showProVersionInPlayStore();
+        } else {
+            this.setBrightnessFromButton(view);
+        }
+    }
+
+    private void setBrightnessFromButton(View view) {
         final CapacitiveButtonsBacklightBrightness buttons = this.buttons;
         if (buttons == null) {
             this.showError("This device is not supported by this application");
@@ -81,6 +90,13 @@ public class MainActivity extends Activity implements View.OnClickListener {
         }
     }
 
+    private void showProVersionInPlayStore() {
+        final Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setData(Uri.parse(
+            "market://details?id=org.sleepydragon.capbutnbrightness.pro"));
+        this.startActivity(intent);
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -94,6 +110,12 @@ public class MainActivity extends Activity implements View.OnClickListener {
         btnBright.setOnClickListener(this);
         final View btnDim = this.findViewById(R.id.btnDim);
         btnDim.setOnClickListener(this);
+
+        // btnUpgrade==null in the pro version
+        final View btnUpgrade = this.findViewById(R.id.btnUpgrade);
+        if (btnUpgrade != null) {
+            btnUpgrade.setOnClickListener(this);
+        }
 
         final DeviceInfoDatabase devices = new DeviceInfoDatabase();
         final DeviceInfo device = devices.getForCurrentDevice();
