@@ -2,6 +2,8 @@ CapButnBrightness/bin/
 CapButnBrightness/gen/
 CapButnBrightnessTest/bin/
 CapButnBrightnessTest/gen/
+CapButnBrightness/libs/
+CapButnBrightness/obj/
 *.swp
 .classpath
 .project
