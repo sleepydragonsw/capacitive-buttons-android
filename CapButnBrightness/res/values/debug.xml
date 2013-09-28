@@ -13,6 +13,7 @@
     <string name="debug_device_possible">Setting Capacitive Buttons Backlight Brightness Possible: %s</string>
     <string name="debug_file_exists">File Exists: %s</string>
     <string name="debug_file_permissions">File Permissions: %s</string>
+    <string name="debug_file_uid">File UID: %s</string>
     <string name="debug_file_contents">File Contents: %s</string>
     <string name="debug_file_readonly">Read-Only</string>
     <string name="debug_file_writeonly">Write-Only</string>

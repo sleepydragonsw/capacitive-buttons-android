@@ -26,6 +26,9 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 import org.sleepydragon.capbutnbrightness.R;
+import org.sleepydragon.capbutnbrightness.clib.CLib;
+import org.sleepydragon.capbutnbrightness.clib.ClibException;
+import org.sleepydragon.capbutnbrightness.clib.Stat;
 import org.sleepydragon.capbutnbrightness.debug.DebugFilesProvider.FileInfo;
 import org.sleepydragon.capbutnbrightness.devices.CapacitiveButtonsBacklightBrightness;
 import org.sleepydragon.capbutnbrightness.devices.DeviceInfo;
@@ -276,6 +279,19 @@ public class DebugLinesGenerator implements Iterable<String>, Iterator<String> {
                                         R.string.debug_file_permissions,
                                         permsValueStr);
                                 lines.add(perms);
+
+                                String uidStr;
+                                try {
+                                    final Stat stat = new Stat();
+                                    CLib.stat(path, stat);
+                                    uidStr = Long.toString(stat.getUid());
+                                } catch (ClibException e1) {
+                                    uidStr = e1.getMessage();
+                                }
+                                final String uid =
+                                    context.getString(R.string.debug_file_uid,
+                                        uidStr);
+                                lines.add(uid);
 
                                 if (canRead) {
                                     String fileContents = "";
