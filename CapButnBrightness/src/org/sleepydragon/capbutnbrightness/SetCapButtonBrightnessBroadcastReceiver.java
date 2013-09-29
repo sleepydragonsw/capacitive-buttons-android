@@ -16,9 +16,11 @@
  */
 package org.sleepydragon.capbutnbrightness;
 
+import org.sleepydragon.capbutnbrightness.IntFileRootHelper.IntWriteException;
 import org.sleepydragon.capbutnbrightness.devices.CapacitiveButtonsBacklightBrightness;
 import org.sleepydragon.capbutnbrightness.devices.DeviceInfo;
 import org.sleepydragon.capbutnbrightness.devices.DeviceInfoDatabase;
+import org.sleepydragon.capbutnbrightness.devices.CapacitiveButtonsBacklightBrightness.DimBrightnessNotSupportedException;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -42,10 +44,12 @@ public class SetCapButtonBrightnessBroadcastReceiver extends BroadcastReceiver {
      * @param setOptions is an int that will be specified as the "options"
      * parameter to {@link CapacitiveButtonsBacklightBrightness#set(int, int)}
      * when invoked.
+     * @param level the brightness level to set (between 0 and 100).
+     * @param context the context object to use.
      * @throws NullPointerException if settings==null.
      */
     public void doSetCapButtonBrightness(Settings settings, int setOptions,
-            int level) {
+            int level, Context context) {
         if (settings == null) {
             throw new NullPointerException("settings==null");
         }
@@ -58,9 +62,24 @@ public class SetCapButtonBrightnessBroadcastReceiver extends BroadcastReceiver {
         if (buttons != null) {
             try {
                 buttons.set(level, setOptions);
-            } catch (final Exception e) {
-                Log.e(Constants.LOG_TAG, "unable to set capacitive button "
-                    + "brightness on boot in " + this.getClass().getName(), e);
+            } catch (IntWriteException e) {
+                Log.e(
+                    Constants.LOG_TAG,
+                    "setting capacitive buttons brightness from widget failed",
+                    e);
+                final String message =
+                    MainActivity
+                        .formatSetBrightnessErrorMessage(e, context);
+                Log.e(Constants.LOG_TAG, message);
+            } catch (DimBrightnessNotSupportedException e) {
+                Log.e(
+                    Constants.LOG_TAG,
+                    "setting capacitive buttons brightness from widget failed",
+                    e);
+                final String message =
+                    MainActivity
+                        .formatSetBrightnessErrorMessage(e, context);
+                Log.e(Constants.LOG_TAG, message);
             }
         }
     }
@@ -111,7 +130,7 @@ public class SetCapButtonBrightnessBroadcastReceiver extends BroadcastReceiver {
                 levelAsInt = level.intValue();
             }
 
-            this.doSetCapButtonBrightness(settings, setOptions, levelAsInt);
+            this.doSetCapButtonBrightness(settings, setOptions, levelAsInt, context);
         }
     }
 
