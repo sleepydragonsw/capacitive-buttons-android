@@ -16,10 +16,14 @@
  */
 package org.sleepydragon.capbutnbrightness.devices;
 
+import java.io.File;
+
+import org.sleepydragon.capbutnbrightness.IntFileRootHelper;
 import org.sleepydragon.capbutnbrightness.debug.DebugFilesProvider;
 
 /**
- * A specialization of CapacitiveButtonsBacklightBrightness for the HTC One (m7).
+ * A specialization of CapacitiveButtonsBacklightBrightness for the HTC One
+ * (m7).
  */
 public class HtcOne implements CapacitiveButtonsBacklightBrightness,
         DebugFilesProvider {
@@ -47,32 +51,43 @@ public class HtcOne implements CapacitiveButtonsBacklightBrightness,
     }
 
     public boolean isSupported() {
-        final boolean exists = FileHelper.fileExists(CURRENTS_PATH);
+        final boolean exists = new File(CURRENTS_PATH).exists();
         return exists;
     }
 
-    public void set(int level, int options) throws SetException {
+    public void set(int level, int options)
+            throws IntFileRootHelper.IntWriteException,
+            DimBrightnessNotSupportedException {
         if (level < 0 || level > 100) {
             throw new IllegalArgumentException("invalid level: " + level);
         }
 
-        RootHelper.verifyRooted();
-        RootHelper.verifyRootAccessGranted();
-
-        RootHelper.chmod("666", CURRENTS_PATH);
-        final boolean backlightOn = (level != 0);
-        if (!backlightOn) {
-            FileHelper.writeToFile(0, CURRENTS_PATH);
-        } else {
-            final boolean dim = (level != 100);
-            final int currents = dim ? 3 : 20;
-            FileHelper.writeToFile(currents, CURRENTS_PATH);
+        IntFileRootHelper intFile = new IntFileRootHelper();
+        try {
+            final boolean backlightOn = (level != 0);
+            if (!backlightOn) {
+                intFile.write(CURRENTS_PATH, 0);
+            } else {
+                final boolean dim = (level != 100);
+                final int currents = dim ? 3 : 20;
+                intFile.write(CURRENTS_PATH, currents);
+            }
+        } finally {
+            intFile.close();
         }
-        RootHelper.chmod("444", CURRENTS_PATH);
     }
 
-    public void setDefault() throws SetException {
-        this.set(100, 0);
-        RootHelper.chmod("644", CURRENTS_PATH);
+    public void setDefault() throws IntFileRootHelper.IntWriteException {
+        try {
+            this.set(100, 0);
+            if (new File(CURRENTS_PATH).exists()) {
+                IntFileRootHelper.makeWritable(CURRENTS_PATH);
+            }
+            if (new File(BRIGHTNESS_PATH).exists()) {
+                IntFileRootHelper.makeWritable(BRIGHTNESS_PATH);
+            }
+        } catch (DimBrightnessNotSupportedException e) {
+            throw new RuntimeException("should never happen: " + e);
+        }
     }
 }

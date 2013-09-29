@@ -16,6 +16,8 @@
  */
 package org.sleepydragon.capbutnbrightness.devices;
 
+import org.sleepydragon.capbutnbrightness.IntFileRootHelper;
+
 /**
  * Methods that control the brightness of the capacitive buttons backlight.
  */
@@ -62,44 +64,34 @@ public interface CapacitiveButtonsBacklightBrightness {
      * @param options must be a combination of the OPTION_ constants defined in
      * this class, which influences the behaviour of the method; if none of the
      * options apply, specify 0.
-     * @throws SetException if setting the brightness of the capacitive buttons
-     * backlight fails.
+     * @throws IntFileRootHelper.IntWriteException if setting the brightness of
+     * the capacitive buttons backlight fails.
      * @throws IllegalArgumentException if the given level is less than 0 or
      * greater than 100.
      * @throws UnsupportedOperationException if isSupported() returns false.
+     * @throws DimBrightnessNotSupportedException if the given level means a
+     * "dim" setting but the device does not support dim.
      */
-    public void set(int level, int options) throws SetException;
+    public void set(int level, int options)
+            throws IntFileRootHelper.IntWriteException,
+            DimBrightnessNotSupportedException;
 
     /**
      * Sets the brightness of the capacitive buttons backlight to its default
      * value and reverts and changes made to the system that were required to
      * sustain the custom value (eg. chmodding files).
-     * <p>
      *
-     * @throws SetException if setting the brightness of the capacitive buttons
-     * backlight fails.
+     * @throws IntFileRootHelper.IntWriteException if setting the brightness of
+     * the capacitive buttons backlight fails.
      */
-    public void setDefault() throws SetException;
-
-    /**
-     * Exception thrown if setting the brightness of the capacitive buttons
-     * backlight fails.
-     */
-    public class SetException extends Exception {
-
-        private static final long serialVersionUID = 7551491163530984762L;
-
-        public SetException(String message) {
-            super(message);
-        }
-    }
+    public void setDefault() throws IntFileRootHelper.IntWriteException;
 
     /**
      * Exception thrown if setting the brightness of the capacitive buttons
      * backlight fails due to a "dim" brightness being requested (ie. neither
      * "bright" nor "off") and the device does not support that brightness.
      */
-    public class DimBrightnessNotSupportedException extends SetException {
+    public class DimBrightnessNotSupportedException extends Exception {
 
         private static final long serialVersionUID = 7551491163530984762L;
 
@@ -107,5 +99,4 @@ public interface CapacitiveButtonsBacklightBrightness {
             super(message);
         }
     }
-
 }

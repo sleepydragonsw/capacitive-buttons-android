@@ -16,16 +16,19 @@
  */
 package org.sleepydragon.capbutnbrightness;
 
+import org.sleepydragon.capbutnbrightness.IntFileRootHelper;
 import org.sleepydragon.capbutnbrightness.devices.CapacitiveButtonsBacklightBrightness;
+import org.sleepydragon.capbutnbrightness.devices.CapacitiveButtonsBacklightBrightness.DimBrightnessNotSupportedException;
 import org.sleepydragon.capbutnbrightness.devices.DeviceInfo;
 import org.sleepydragon.capbutnbrightness.devices.DeviceInfoDatabase;
-import org.sleepydragon.capbutnbrightness.devices.RootHelper;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -83,7 +86,9 @@ public class MainActivity extends Activity implements View.OnClickListener {
                 } else {
                     buttons.set(level, 0);
                 }
-            } catch (final CapacitiveButtonsBacklightBrightness.SetException e) {
+            } catch (final DimBrightnessNotSupportedException e) {
+                this.showError(e);
+            } catch (final IntFileRootHelper.IntWriteException e) {
                 this.showError(e);
             }
             ButtonBrightnessAppWidgetProvider.postUpdateWidgets(this);
@@ -150,24 +155,90 @@ public class MainActivity extends Activity implements View.OnClickListener {
         }
     }
 
-    private void showError(CapacitiveButtonsBacklightBrightness.SetException e) {
-        assert e != null;
+    public static String formatSetBrightnessErrorMessage(Exception e,
+            Context context) {
+        final String exMessage = e.getMessage();
         final String message;
-        if (e instanceof RootHelper.NotRootedException) {
+        if (e instanceof DimBrightnessNotSupportedException) {
             message =
-                "This device is not rooted; it must be rooted in order for "
-                    + "this application to function correctly";
-        } else if (e instanceof RootHelper.RootAccessDeniedException) {
+                context.getString(R.string.set_error_dim_not_supported,
+                    exMessage);
+        } else if (e instanceof IntFileRootHelper.ChmodFailedException) {
+            final String path =
+                ((IntFileRootHelper.ChmodFailedException) e).getPath();
             message =
-                "Root access was denied; this application requires root "
-                    + " permissions in order to function correctly";
-        } else if (e instanceof CapacitiveButtonsBacklightBrightness.DimBrightnessNotSupportedException) {
+                context.getString(R.string.set_error_chmod_failed, path,
+                    exMessage);
+        } else if (e instanceof IntFileRootHelper.ChownExitCodeException) {
+            final IntFileRootHelper.ChownExitCodeException e2 =
+                (IntFileRootHelper.ChownExitCodeException) e;
+            final String output = e2.getMessage();
+            final String path = e2.getPath();
+            final int exitCode = e2.getExitCode();
             message =
-                "This device, ROM, or kernel does not support setting the "
-                    + "brigtness to \"dim\": " + e.getMessage();
+                context.getString(R.string.set_error_chown_exit_code, path,
+                    exitCode, output);
+        } else if (e instanceof IntFileRootHelper.ChownLaunchException) {
+            final IntFileRootHelper.ChownLaunchException e2 =
+                (IntFileRootHelper.ChownLaunchException) e;
+            final String path = e2.getPath();
+            message =
+                context.getString(R.string.set_error_chown_launch, path,
+                    exMessage);
+        } else if (e instanceof IntFileRootHelper.ChownWaitInterruptedException) {
+            final IntFileRootHelper.ChownWaitInterruptedException e2 =
+                (IntFileRootHelper.ChownWaitInterruptedException) e;
+            final String path = e2.getPath();
+            message =
+                context.getString(R.string.set_error_chown_wait, path,
+                    exMessage);
+        } else if (e instanceof IntFileRootHelper.StatFailedException) {
+            final IntFileRootHelper.StatFailedException e2 =
+                (IntFileRootHelper.StatFailedException) e;
+            final String path = e2.getPath();
+            message =
+                context.getString(R.string.set_error_stat, path, exMessage);
+        } else if (e instanceof IntFileRootHelper.IntFileNotFoundException) {
+            final IntFileRootHelper.IntFileNotFoundException e2 =
+                (IntFileRootHelper.IntFileNotFoundException) e;
+            final String path = e2.getPath();
+            message =
+                context.getString(R.string.set_error_file_not_found, path);
+        } else if (e instanceof IntFileRootHelper.IntFileIOException) {
+            final IntFileRootHelper.IntFileIOException e2 =
+                (IntFileRootHelper.IntFileIOException) e;
+            final String path = e2.getPath();
+            message = context.getString(R.string.set_error_io, path, exMessage);
+        } else if (e instanceof IntFileRootHelper.RootShellCreateDeniedException) {
+            message =
+                context.getString(R.string.set_error_root_denied, exMessage);
+        } else if (e instanceof IntFileRootHelper.RootShellCreateIOException) {
+            message =
+                context.getString(R.string.set_error_root_error, exMessage);
+        } else if (e instanceof IntFileRootHelper.RootShellCreateTimeoutException) {
+            message =
+                context.getString(R.string.set_error_root_timeout, exMessage);
+        } else if (e instanceof IntFileRootHelper.RootShellNotRootedException) {
+            message = context.getString(R.string.set_error_root_not_rooted);
+        } else if (e instanceof IntFileRootHelper.IntFileWriteException) {
+            final IntFileRootHelper.IntFileWriteException e2 =
+                (IntFileRootHelper.IntFileWriteException) e;
+            final String path = e2.getPath();
+            message =
+                context.getString(R.string.set_error_generic, path, exMessage);
         } else {
-            message = e.getMessage();
+            message = context.getString(R.string.set_error_unexpected, e);
         }
+
+        return message;
+    }
+
+    private void showError(Exception e) {
+        assert e != null;
+        Log.e(Constants.LOG_TAG,
+            "setting capacitive buttons brightness from main UI failed", e);
+        final String message = formatSetBrightnessErrorMessage(e, this);
+        Log.e(Constants.LOG_TAG, message);
         this.showError(message);
     }
 

@@ -16,7 +16,9 @@
  */
 package org.sleepydragon.capbutnbrightness;
 
+import org.sleepydragon.capbutnbrightness.IntFileRootHelper.IntWriteException;
 import org.sleepydragon.capbutnbrightness.devices.CapacitiveButtonsBacklightBrightness;
+import org.sleepydragon.capbutnbrightness.devices.CapacitiveButtonsBacklightBrightness.DimBrightnessNotSupportedException;
 import org.sleepydragon.capbutnbrightness.devices.DeviceInfo;
 import org.sleepydragon.capbutnbrightness.devices.DeviceInfoDatabase;
 
@@ -70,9 +72,24 @@ public class ButtonBrightnessAppWidgetProvider extends AppWidgetProvider {
                 try {
                     assert newLevel != null;
                     buttons.set(newLevel, 0);
-                } catch (final CapacitiveButtonsBacklightBrightness.SetException e) {
-                    Log.e(Constants.LOG_TAG,
-                        "Unable to set brightness in widget", e);
+                } catch (IntWriteException e) {
+                    Log.e(
+                        Constants.LOG_TAG,
+                        "setting capacitive buttons brightness from widget failed",
+                        e);
+                    final String message =
+                        MainActivity
+                            .formatSetBrightnessErrorMessage(e, context);
+                    Log.e(Constants.LOG_TAG, message);
+                } catch (DimBrightnessNotSupportedException e) {
+                    Log.e(
+                        Constants.LOG_TAG,
+                        "setting capacitive buttons brightness from widget failed",
+                        e);
+                    final String message =
+                        MainActivity
+                            .formatSetBrightnessErrorMessage(e, context);
+                    Log.e(Constants.LOG_TAG, message);
                 }
             }
 

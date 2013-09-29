@@ -18,6 +18,7 @@ package org.sleepydragon.capbutnbrightness.devices;
 
 import java.io.File;
 
+import org.sleepydragon.capbutnbrightness.IntFileRootHelper;
 import org.sleepydragon.capbutnbrightness.debug.DebugFilesProvider;
 
 /**
@@ -49,12 +50,14 @@ public class HtcOneXEndeavoru implements CapacitiveButtonsBacklightBrightness,
     }
 
     public boolean isSupported() {
-        final boolean bExists = FileHelper.fileExists(BRIGHTNESS_PATH);
+        final boolean bExists = new File(BRIGHTNESS_PATH).exists();
         final boolean supported = bExists;
         return supported;
     }
 
-    public void set(int level, int options) throws SetException {
+    public void set(int level, int options)
+            throws IntFileRootHelper.IntWriteException,
+            DimBrightnessNotSupportedException {
         if (level < 0 || level > 100) {
             throw new IllegalArgumentException("invalid level: " + level);
         }
@@ -67,51 +70,51 @@ public class HtcOneXEndeavoru implements CapacitiveButtonsBacklightBrightness,
             return;
         }
 
-        RootHelper.verifyRooted();
-        RootHelper.verifyRootAccessGranted();
-
         final boolean currentsFileExists = new File(CURRENTS_PATH).isFile();
         final boolean dim = (level != 100);
-        if (dim && ! currentsFileExists) {
+        if (dim && !currentsFileExists) {
             throw new DimBrightnessNotSupportedException("dim is not supported");
         }
-        if (currentsFileExists) {
-            RootHelper.chmod("666", CURRENTS_PATH);
-        }
-        RootHelper.chmod("666", BRIGHTNESS_PATH);
 
         final boolean backlightOn = (level != 0);
-        if (!backlightOn) {
-            FileHelper.writeToFile(0, BRIGHTNESS_PATH);
-            if (currentsFileExists) {
-                FileHelper.writeToFile(0, CURRENTS_PATH);
-            }
-        } else {
-            final int currents = dim ? 1 : 3;
-            if (!inResponseToScreenOn || dim) {
+        final IntFileRootHelper intFile = new IntFileRootHelper();
+
+        try {
+            if (!backlightOn) {
+                intFile.write(BRIGHTNESS_PATH, 0);
                 if (currentsFileExists) {
-                    FileHelper.writeToFile(currents, CURRENTS_PATH);
+                    intFile.write(CURRENTS_PATH, 0);
+                }
+            } else {
+                final int currents = dim ? 1 : 3;
+                if (!inResponseToScreenOn || dim) {
+                    if (currentsFileExists) {
+                        intFile.write(CURRENTS_PATH, currents);
+                    }
+                }
+                intFile.write(BRIGHTNESS_PATH, 1);
+                if (!inResponseToScreenOn || dim) {
+                    if (currentsFileExists) {
+                        intFile.write(CURRENTS_PATH, currents);
+                    }
                 }
             }
-            FileHelper.writeToFile(1, BRIGHTNESS_PATH);
-            if (!inResponseToScreenOn || dim) {
-                if (currentsFileExists) {
-                    FileHelper.writeToFile(currents, CURRENTS_PATH);
-                }
-            }
-        }
-        RootHelper.chmod("444", BRIGHTNESS_PATH);
-        if (currentsFileExists) {
-            RootHelper.chmod("444", CURRENTS_PATH);
+        } finally {
+            intFile.close();
         }
     }
 
-    public void setDefault() throws SetException {
-        this.set(100, 0);
-        final boolean currentsFileExists = new File(CURRENTS_PATH).isFile();
-        if (currentsFileExists) {
-            RootHelper.chmod("644", CURRENTS_PATH);
+    public void setDefault() throws IntFileRootHelper.IntWriteException {
+        try {
+            this.set(100, 0);
+            if (new File(CURRENTS_PATH).exists()) {
+                IntFileRootHelper.makeWritable(CURRENTS_PATH);
+            }
+            if (new File(BRIGHTNESS_PATH).exists()) {
+                IntFileRootHelper.makeWritable(BRIGHTNESS_PATH);
+            }
+        } catch (DimBrightnessNotSupportedException e) {
+            throw new RuntimeException("should never happen: " + e);
         }
-        RootHelper.chmod("644", BRIGHTNESS_PATH);
     }
 }
