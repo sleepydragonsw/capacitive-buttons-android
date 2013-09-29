@@ -21,5 +21,7 @@
     <string name="debug_file_noperms">Neither Readable Nor Writable</string>
     <string name="debug_copied">Text Copied to Clipboard</string>
     <string name="debug_process_uid">Process UID: %d</string>
+    <string name="debug_cpu1">CPU ABI 1: %s</string>
+    <string name="debug_cpu2">CPU ABI 2: %s</string>
 
 </resources>

@@ -353,11 +353,32 @@ public class DebugLinesGenerator implements Iterable<String>, Iterator<String> {
     private class MiscSection implements Section {
 
         public String[] getLines() {
+            final String uid = this.getUidLine();
+            final String cpu1 = this.getCpuLine1();
+            final String cpu2 = this.getCpuLine2();
+            return new String[] { uid, cpu1, cpu2 };
+        }
+
+        private String getUidLine() {
             final Context context = DebugLinesGenerator.this.context;
             final int uidValue = Process.myUid();
             final String uid =
                 context.getString(R.string.debug_process_uid, uidValue);
-            return new String[] { uid };
+            return uid;
+        }
+
+        private String getCpuLine1() {
+            final Context context = DebugLinesGenerator.this.context;
+            final String cpuAbi = Build.CPU_ABI;
+            final String cpu = context.getString(R.string.debug_cpu1, cpuAbi);
+            return cpu;
+        }
+
+        private String getCpuLine2() {
+            final Context context = DebugLinesGenerator.this.context;
+            final String cpuAbi = Build.CPU_ABI2;
+            final String cpu = context.getString(R.string.debug_cpu2, cpuAbi);
+            return cpu;
         }
 
     }
