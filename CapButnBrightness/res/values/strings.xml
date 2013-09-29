@@ -50,6 +50,7 @@
         %1$s (stat command failed: %2$s)</string>
     <string name="set_error_io">I/O error writing to file: %1$s (%2$s)</string>
     <string name="set_error_file_not_found">File not found: %s</string>
+    <string name="set_error_unsupported">This device is not supported</string>
     <string name="set_error_generic">Writing to file %1$s failed: %2$s</string>
     <string name="set_error_unexpected">Unexpected exception: %s</string>
 

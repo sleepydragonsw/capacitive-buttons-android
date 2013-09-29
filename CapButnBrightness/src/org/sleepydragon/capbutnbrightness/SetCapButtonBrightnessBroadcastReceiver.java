@@ -68,8 +68,7 @@ public class SetCapButtonBrightnessBroadcastReceiver extends BroadcastReceiver {
                     "setting capacitive buttons brightness from widget failed",
                     e);
                 final String message =
-                    MainActivity
-                        .formatSetBrightnessErrorMessage(e, context);
+                        SetBrightnessService.formatSetBrightnessErrorMessage(e, context);
                 Log.e(Constants.LOG_TAG, message);
             } catch (DimBrightnessNotSupportedException e) {
                 Log.e(
@@ -77,8 +76,7 @@ public class SetCapButtonBrightnessBroadcastReceiver extends BroadcastReceiver {
                     "setting capacitive buttons brightness from widget failed",
                     e);
                 final String message =
-                    MainActivity
-                        .formatSetBrightnessErrorMessage(e, context);
+                        SetBrightnessService.formatSetBrightnessErrorMessage(e, context);
                 Log.e(Constants.LOG_TAG, message);
             }
         }

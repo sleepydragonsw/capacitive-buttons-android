@@ -78,8 +78,7 @@ public class ButtonBrightnessAppWidgetProvider extends AppWidgetProvider {
                         "setting capacitive buttons brightness from widget failed",
                         e);
                     final String message =
-                        MainActivity
-                            .formatSetBrightnessErrorMessage(e, context);
+                            SetBrightnessService.formatSetBrightnessErrorMessage(e, context);
                     Log.e(Constants.LOG_TAG, message);
                 } catch (DimBrightnessNotSupportedException e) {
                     Log.e(
@@ -87,8 +86,7 @@ public class ButtonBrightnessAppWidgetProvider extends AppWidgetProvider {
                         "setting capacitive buttons brightness from widget failed",
                         e);
                     final String message =
-                        MainActivity
-                            .formatSetBrightnessErrorMessage(e, context);
+                            SetBrightnessService.formatSetBrightnessErrorMessage(e, context);
                     Log.e(Constants.LOG_TAG, message);
                 }
             }

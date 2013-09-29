@@ -16,50 +16,35 @@
  */
 package org.sleepydragon.capbutnbrightness;
 
-import org.sleepydragon.capbutnbrightness.IntFileRootHelper;
-import org.sleepydragon.capbutnbrightness.devices.CapacitiveButtonsBacklightBrightness;
-import org.sleepydragon.capbutnbrightness.devices.CapacitiveButtonsBacklightBrightness.DimBrightnessNotSupportedException;
-import org.sleepydragon.capbutnbrightness.devices.DeviceInfo;
-import org.sleepydragon.capbutnbrightness.devices.DeviceInfoDatabase;
+import java.lang.ref.WeakReference;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
+import android.os.Handler;
+import android.os.Message;
+import android.os.Messenger;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
 public class MainActivity extends Activity implements View.OnClickListener {
 
-    private CapacitiveButtonsBacklightBrightness buttons;
-    private Settings settings;
-
-    private Integer getBrightnessLevel(View view) {
+    private SetBrightnessService.Level getBrightnessLevel(View view) {
         assert view != null;
-
-        final int dimBrightness;
-        final CapacitiveButtonsBacklightBrightness buttons = this.buttons;
-        if (buttons != null) {
-            dimBrightness = buttons.getDefaultDimLevel();
-        } else {
-            // just choose some arbitrary value in the range [0,100]
-            dimBrightness = 50;
-        }
 
         final int id = view.getId();
         switch (id) {
             case R.id.btnDefault:
-                return null;
+                return SetBrightnessService.Level.DEFAULT;
             case R.id.btnOff:
-                return 0;
+                return SetBrightnessService.Level.OFF;
             case R.id.btnDim:
-                return dimBrightness;
+                return SetBrightnessService.Level.DIM;
             case R.id.btnBright:
-                return 100;
+                return SetBrightnessService.Level.BRIGHT;
             default:
                 throw new IllegalArgumentException("unknown view: " + view);
         }
@@ -71,35 +56,6 @@ public class MainActivity extends Activity implements View.OnClickListener {
         } else {
             this.setBrightnessFromButton(view);
         }
-    }
-
-    private void setBrightnessFromButton(View view) {
-        final CapacitiveButtonsBacklightBrightness buttons = this.buttons;
-        if (buttons == null) {
-            this.showError("This device is not supported by this application");
-        } else {
-            final Integer level = this.getBrightnessLevel(view);
-            this.settings.setLevel(level);
-            try {
-                if (level == null) {
-                    buttons.setDefault();
-                } else {
-                    buttons.set(level, 0);
-                }
-            } catch (final DimBrightnessNotSupportedException e) {
-                this.showError(e);
-            } catch (final IntFileRootHelper.IntWriteException e) {
-                this.showError(e);
-            }
-            ButtonBrightnessAppWidgetProvider.postUpdateWidgets(this);
-        }
-    }
-
-    private void showProVersionInPlayStore() {
-        final Intent intent = new Intent(Intent.ACTION_VIEW);
-        intent.setData(Uri.parse(
-            "market://details?id=org.sleepydragon.capbutnbrightness.pro"));
-        this.startActivity(intent);
     }
 
     @Override
@@ -121,17 +77,6 @@ public class MainActivity extends Activity implements View.OnClickListener {
         if (btnUpgrade != null) {
             btnUpgrade.setOnClickListener(this);
         }
-
-        final DeviceInfoDatabase devices = new DeviceInfoDatabase();
-        final DeviceInfo device = devices.getForCurrentDevice();
-        this.buttons = device.getCapacitiveButtonsBacklightBrightness();
-
-        // start the service to respond to the screen turning on
-        final Intent serviceIntent = new Intent();
-        serviceIntent.setClass(this, ScreenPowerOnService.class);
-        this.startService(serviceIntent);
-
-        this.settings = new Settings(this);
     }
 
     @Override
@@ -155,91 +100,18 @@ public class MainActivity extends Activity implements View.OnClickListener {
         }
     }
 
-    public static String formatSetBrightnessErrorMessage(Exception e,
-            Context context) {
-        final String exMessage = e.getMessage();
-        final String message;
-        if (e instanceof DimBrightnessNotSupportedException) {
-            message =
-                context.getString(R.string.set_error_dim_not_supported,
-                    exMessage);
-        } else if (e instanceof IntFileRootHelper.ChmodFailedException) {
-            final String path =
-                ((IntFileRootHelper.ChmodFailedException) e).getPath();
-            message =
-                context.getString(R.string.set_error_chmod_failed, path,
-                    exMessage);
-        } else if (e instanceof IntFileRootHelper.ChownExitCodeException) {
-            final IntFileRootHelper.ChownExitCodeException e2 =
-                (IntFileRootHelper.ChownExitCodeException) e;
-            final String output = e2.getMessage();
-            final String path = e2.getPath();
-            final int exitCode = e2.getExitCode();
-            message =
-                context.getString(R.string.set_error_chown_exit_code, path,
-                    exitCode, output);
-        } else if (e instanceof IntFileRootHelper.ChownLaunchException) {
-            final IntFileRootHelper.ChownLaunchException e2 =
-                (IntFileRootHelper.ChownLaunchException) e;
-            final String path = e2.getPath();
-            message =
-                context.getString(R.string.set_error_chown_launch, path,
-                    exMessage);
-        } else if (e instanceof IntFileRootHelper.ChownWaitInterruptedException) {
-            final IntFileRootHelper.ChownWaitInterruptedException e2 =
-                (IntFileRootHelper.ChownWaitInterruptedException) e;
-            final String path = e2.getPath();
-            message =
-                context.getString(R.string.set_error_chown_wait, path,
-                    exMessage);
-        } else if (e instanceof IntFileRootHelper.StatFailedException) {
-            final IntFileRootHelper.StatFailedException e2 =
-                (IntFileRootHelper.StatFailedException) e;
-            final String path = e2.getPath();
-            message =
-                context.getString(R.string.set_error_stat, path, exMessage);
-        } else if (e instanceof IntFileRootHelper.IntFileNotFoundException) {
-            final IntFileRootHelper.IntFileNotFoundException e2 =
-                (IntFileRootHelper.IntFileNotFoundException) e;
-            final String path = e2.getPath();
-            message =
-                context.getString(R.string.set_error_file_not_found, path);
-        } else if (e instanceof IntFileRootHelper.IntFileIOException) {
-            final IntFileRootHelper.IntFileIOException e2 =
-                (IntFileRootHelper.IntFileIOException) e;
-            final String path = e2.getPath();
-            message = context.getString(R.string.set_error_io, path, exMessage);
-        } else if (e instanceof IntFileRootHelper.RootShellCreateDeniedException) {
-            message =
-                context.getString(R.string.set_error_root_denied, exMessage);
-        } else if (e instanceof IntFileRootHelper.RootShellCreateIOException) {
-            message =
-                context.getString(R.string.set_error_root_error, exMessage);
-        } else if (e instanceof IntFileRootHelper.RootShellCreateTimeoutException) {
-            message =
-                context.getString(R.string.set_error_root_timeout, exMessage);
-        } else if (e instanceof IntFileRootHelper.RootShellNotRootedException) {
-            message = context.getString(R.string.set_error_root_not_rooted);
-        } else if (e instanceof IntFileRootHelper.IntFileWriteException) {
-            final IntFileRootHelper.IntFileWriteException e2 =
-                (IntFileRootHelper.IntFileWriteException) e;
-            final String path = e2.getPath();
-            message =
-                context.getString(R.string.set_error_generic, path, exMessage);
-        } else {
-            message = context.getString(R.string.set_error_unexpected, e);
-        }
+    private void setBrightnessFromButton(View view) {
+        final SetBrightnessService.Level level = this.getBrightnessLevel(view);
+        final Intent intent = new Intent();
+        intent.setAction(SetBrightnessService.ACTION_SET_BRIGHTNESS);
+        intent.putExtra(SetBrightnessService.EXTRA_NAME_LEVEL, level.name());
+        intent.setClass(this, SetBrightnessService.class);
 
-        return message;
-    }
+        final Handler handler = new SetBrightnessMessageHandler(this);
+        final Messenger messenger = new Messenger(handler);
+        intent.putExtra(SetBrightnessService.EXTRA_NAME_MESSENGER, messenger);
 
-    private void showError(Exception e) {
-        assert e != null;
-        Log.e(Constants.LOG_TAG,
-            "setting capacitive buttons brightness from main UI failed", e);
-        final String message = formatSetBrightnessErrorMessage(e, this);
-        Log.e(Constants.LOG_TAG, message);
-        this.showError(message);
+        this.startService(intent);
     }
 
     private void showError(String message) {
@@ -247,6 +119,36 @@ public class MainActivity extends Activity implements View.OnClickListener {
         builder.setMessage(message);
         builder.setTitle("Error");
         builder.show();
+    }
+
+    private void showProVersionInPlayStore() {
+        final Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent
+            .setData(Uri
+                .parse("market://details?id=org.sleepydragon.capbutnbrightness.pro"));
+        this.startActivity(intent);
+    }
+
+    private static class SetBrightnessMessageHandler extends Handler {
+
+        private final WeakReference<MainActivity> ref;
+
+        public SetBrightnessMessageHandler(MainActivity activity) {
+            this.ref = new WeakReference<MainActivity>(activity);
+        }
+
+        @Override
+        public void handleMessage(Message message) {
+            if (message.what == SetBrightnessService.WHAT_FAILED) {
+                final Bundle data = message.getData();
+                final String messageText =
+                    data.getString(SetBrightnessService.KEY_MESSAGE);
+                final MainActivity activity = this.ref.get();
+                if (activity != null) {
+                    activity.showError(messageText);
+                }
+            }
+        }
     }
 
 }
