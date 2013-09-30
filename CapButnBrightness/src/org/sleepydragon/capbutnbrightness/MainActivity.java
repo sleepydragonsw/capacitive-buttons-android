@@ -26,6 +26,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Messenger;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -131,21 +132,70 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
     private static class SetBrightnessMessageHandler extends Handler {
 
-        private final WeakReference<MainActivity> ref;
+        private final WeakReference<MainActivity> activityRef;
+        private WeakReference<AlertDialog> rootAlertRef;
 
         public SetBrightnessMessageHandler(MainActivity activity) {
-            this.ref = new WeakReference<MainActivity>(activity);
+            this.activityRef = new WeakReference<MainActivity>(activity);
         }
 
         @Override
         public void handleMessage(Message message) {
-            if (message.what == SetBrightnessService.WHAT_FAILED) {
-                final Bundle data = message.getData();
-                final String messageText =
-                    data.getString(SetBrightnessService.KEY_MESSAGE);
-                final MainActivity activity = this.ref.get();
-                if (activity != null) {
-                    activity.showError(messageText);
+            switch (message.what) {
+                case SetBrightnessService.WHAT_FAILED:
+                    this.handleWhatFailed(message);
+                    break;
+                case SetBrightnessService.WHAT_ROOT_REQUEST_STARTED:
+                    this.handleWhatRootRequestStarted();
+                    break;
+                case SetBrightnessService.WHAT_ROOT_REQUEST_COMPLETED:
+                    this.handleWhatRootRequestCompleted();
+                    break;
+            }
+        }
+
+        private void handleWhatFailed(Message message) {
+            final Bundle data = message.getData();
+            final String messageText =
+                data.getString(SetBrightnessService.KEY_MESSAGE);
+            final MainActivity activity = this.activityRef.get();
+            if (activity != null) {
+                activity.showError(messageText);
+            }
+        }
+
+        private void handleWhatRootRequestStarted() {
+            final MainActivity activity = this.activityRef.get();
+
+            AlertDialog dialog;
+            final WeakReference<AlertDialog> dialogRef = this.rootAlertRef;
+            if (dialogRef == null) {
+                dialog = null;
+            } else {
+                dialog = dialogRef.get();
+            }
+
+            if (activity != null && dialog == null) {
+                final AlertDialog.Builder builder =
+                    new AlertDialog.Builder(activity);
+                builder.setMessage("Requesting superuser permissions...");
+                builder.setTitle("Superuser Access");
+                dialog = builder.create();
+                dialog.show();
+                Log.e("DENVER", "Showing dialog: " + dialog);
+                this.rootAlertRef = new WeakReference<AlertDialog>(dialog);
+            }
+        }
+
+        private void handleWhatRootRequestCompleted() {
+            final WeakReference<AlertDialog> dialogRef = this.rootAlertRef;
+            if (dialogRef != null) {
+                this.rootAlertRef = null;
+                final AlertDialog dialog = dialogRef.get();
+                if (dialog != null) {
+                    Log.e("DENVER", "Dismissing dialog: " + dialog);
+                    Log.e("DENVER", "dialog.isShowing(): " + dialog.isShowing());
+                    dialog.dismiss();
                 }
             }
         }

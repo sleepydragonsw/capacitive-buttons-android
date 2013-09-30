@@ -55,7 +55,8 @@ public class HtcOneXEndeavoru implements CapacitiveButtonsBacklightBrightness,
         return supported;
     }
 
-    public void set(int level, int options)
+    public void set(int level, int options,
+            IntFileRootHelper.OperationNotifier notifier)
             throws IntFileRootHelper.IntWriteException,
             DimBrightnessNotSupportedException {
         if (level < 0 || level > 100) {
@@ -77,7 +78,7 @@ public class HtcOneXEndeavoru implements CapacitiveButtonsBacklightBrightness,
         }
 
         final boolean backlightOn = (level != 0);
-        final IntFileRootHelper intFile = new IntFileRootHelper();
+        final IntFileRootHelper intFile = new IntFileRootHelper(notifier);
 
         try {
             if (!backlightOn) {
@@ -104,9 +105,10 @@ public class HtcOneXEndeavoru implements CapacitiveButtonsBacklightBrightness,
         }
     }
 
-    public void setDefault() throws IntFileRootHelper.IntWriteException {
+    public void setDefault(IntFileRootHelper.OperationNotifier notifier)
+            throws IntFileRootHelper.IntWriteException {
         try {
-            this.set(100, 0);
+            this.set(100, 0, notifier);
             if (new File(CURRENTS_PATH).exists()) {
                 IntFileRootHelper.makeWritable(CURRENTS_PATH);
             }

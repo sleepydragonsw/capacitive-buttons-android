@@ -71,7 +71,7 @@ public class ButtonBrightnessAppWidgetProvider extends AppWidgetProvider {
             if (buttons != null) {
                 try {
                     assert newLevel != null;
-                    buttons.set(newLevel, 0);
+                    buttons.set(newLevel, 0, null);
                 } catch (IntWriteException e) {
                     Log.e(
                         Constants.LOG_TAG,

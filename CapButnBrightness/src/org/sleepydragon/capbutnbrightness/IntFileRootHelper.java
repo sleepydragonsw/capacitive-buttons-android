@@ -62,6 +62,11 @@ public class IntFileRootHelper {
     private Shell shell;
 
     /**
+     * Object that gets notified of events.
+     */
+    private OperationNotifier notifier;
+
+    /**
      * The object to be synchronized on when accessing nextCommandId.
      */
     private static final Object nextIdLock = new Object();
@@ -71,6 +76,16 @@ public class IntFileRootHelper {
      * value *must* be done while synchronized on nextIdLock.
      */
     private static int nextId;
+
+    /**
+     * Creates a new instance of IntFileRootHelper.
+     *
+     * @param notifier the object to get notified of events; may be null to not
+     * send notifications about events.
+     */
+    public IntFileRootHelper(OperationNotifier notifier) {
+        this.notifier = notifier;
+    }
 
     /**
      * Releases all resources acquired by this object. This method should be
@@ -103,6 +118,10 @@ public class IntFileRootHelper {
     private Shell getOrCreateRootShell() throws RootShellCreateException {
         Shell shell = this.shell;
         if (shell == null) {
+            final OperationNotifier notifier = this.notifier;
+            if (notifier != null) {
+                notifier.rootRequestStarted();
+            }
             try {
                 shell = RootTools.getShell(true);
             } catch (final IOException e) {
@@ -116,6 +135,10 @@ public class IntFileRootHelper {
                 throw new RootShellCreateTimeoutException(e.getMessage());
             } catch (final RootDeniedException e) {
                 throw new RootShellCreateDeniedException(e.getMessage());
+            } finally {
+                if (notifier != null) {
+                    notifier.rootRequestCompleted();
+                }
             }
         }
         assert shell != null;
@@ -710,4 +733,20 @@ public class IntFileRootHelper {
         }
     }
 
+    /**
+     * Interface that can be implemented to be notified when events occur.
+     */
+    public static interface OperationNotifier {
+
+        /**
+         * Invoked when a request for root privileges starts.
+         */
+        public void rootRequestStarted();
+
+        /**
+         * Invoked when a request for root privileges completes.
+         */
+        public void rootRequestCompleted();
+
+    }
 }

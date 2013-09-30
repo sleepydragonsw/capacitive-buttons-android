@@ -55,14 +55,14 @@ public class HtcOne implements CapacitiveButtonsBacklightBrightness,
         return exists;
     }
 
-    public void set(int level, int options)
+    public void set(int level, int options, IntFileRootHelper.OperationNotifier notifier)
             throws IntFileRootHelper.IntWriteException,
             DimBrightnessNotSupportedException {
         if (level < 0 || level > 100) {
             throw new IllegalArgumentException("invalid level: " + level);
         }
 
-        IntFileRootHelper intFile = new IntFileRootHelper();
+        IntFileRootHelper intFile = new IntFileRootHelper(notifier);
         try {
             final boolean backlightOn = (level != 0);
             if (!backlightOn) {
@@ -77,9 +77,10 @@ public class HtcOne implements CapacitiveButtonsBacklightBrightness,
         }
     }
 
-    public void setDefault() throws IntFileRootHelper.IntWriteException {
+    public void setDefault(IntFileRootHelper.OperationNotifier notifier)
+            throws IntFileRootHelper.IntWriteException {
         try {
-            this.set(100, 0);
+            this.set(100, 0, notifier);
             if (new File(CURRENTS_PATH).exists()) {
                 IntFileRootHelper.makeWritable(CURRENTS_PATH);
             }

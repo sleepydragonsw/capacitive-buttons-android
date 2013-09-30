@@ -54,7 +54,8 @@ public class HtcOneXEvita implements CapacitiveButtonsBacklightBrightness,
         return exists;
     }
 
-    public void set(int level, int options)
+    public void set(int level, int options,
+            IntFileRootHelper.OperationNotifier notifier)
             throws IntFileRootHelper.IntWriteException,
             DimBrightnessNotSupportedException {
         if (level < 0 || level > 100) {
@@ -69,7 +70,7 @@ public class HtcOneXEvita implements CapacitiveButtonsBacklightBrightness,
         }
 
         final boolean backlightOn = (level != 0);
-        IntFileRootHelper intFile = new IntFileRootHelper();
+        IntFileRootHelper intFile = new IntFileRootHelper(notifier);
 
         try {
             if (!backlightOn) {
@@ -84,9 +85,10 @@ public class HtcOneXEvita implements CapacitiveButtonsBacklightBrightness,
         }
     }
 
-    public void setDefault() throws IntFileRootHelper.IntWriteException {
+    public void setDefault(IntFileRootHelper.OperationNotifier notifier)
+            throws IntFileRootHelper.IntWriteException {
         try {
-            this.set(100, 0);
+            this.set(100, 0, notifier);
             if (new File(CURRENTS_PATH).exists()) {
                 IntFileRootHelper.makeWritable(CURRENTS_PATH);
             }

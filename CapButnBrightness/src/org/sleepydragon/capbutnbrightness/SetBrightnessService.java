@@ -24,7 +24,6 @@ import org.sleepydragon.capbutnbrightness.devices.DeviceInfoDatabase;
 import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.LevelListDrawable;
 import android.os.Bundle;
 import android.os.Message;
 import android.os.Messenger;
@@ -84,6 +83,18 @@ public class SetBrightnessService extends IntentService {
      * suitable for display to a user.
      */
     public static final int WHAT_FAILED = 200;
+
+    /**
+     * The "what" attribute of a {@link Message} that indicates that a request
+     * for superuser (a.k.a. "root") privileges has started.
+     */
+    public static final int WHAT_ROOT_REQUEST_STARTED = 300;
+
+    /**
+     * The "what" attribute of a {@link Message} that indicates that a request
+     * for superuser (a.k.a. "root") privileges has completed.
+     */
+    public static final int WHAT_ROOT_REQUEST_COMPLETED = 301;
 
     /**
      * The key in a {@link Bundle} whose value is a string that is a message
@@ -162,11 +173,13 @@ public class SetBrightnessService extends IntentService {
         ButtonBrightnessAppWidgetProvider.postUpdateWidgets(this);
 
         // set the brightness level
+        final OperationNotifierMessageSender notifier =
+            new OperationNotifierMessageSender(messenger);
         try {
             if (levelValue == null) {
-                buttons.setDefault();
+                buttons.setDefault(notifier);
             } else {
-                buttons.set(levelValue, 0);
+                buttons.set(levelValue, 0, notifier);
             }
         } catch (final Exception e) {
             final String message = formatSetBrightnessErrorMessage(e, this);
@@ -305,13 +318,17 @@ public class SetBrightnessService extends IntentService {
     }
 
     private static void reportSuccess(Messenger messenger) {
+        reportWhat(messenger, WHAT_SUCCESS);
+    }
+
+    private static void reportWhat(Messenger messenger, int what) {
         // nothing to do if no messenger was provided
         if (messenger == null) {
             return;
         }
 
         final Message message = Message.obtain();
-        message.what = WHAT_SUCCESS;
+        message.what = what;
 
         try {
             messenger.send(message);
@@ -320,4 +337,23 @@ public class SetBrightnessService extends IntentService {
         }
     }
 
+    private static class OperationNotifierMessageSender implements
+            IntFileRootHelper.OperationNotifier {
+
+        private final Messenger messenger;
+
+        public OperationNotifierMessageSender(Messenger messenger) {
+            this.messenger = messenger;
+        }
+
+        @Override
+        public void rootRequestCompleted() {
+            reportWhat(this.messenger, WHAT_ROOT_REQUEST_COMPLETED);
+        }
+
+        @Override
+        public void rootRequestStarted() {
+            reportWhat(this.messenger, WHAT_ROOT_REQUEST_STARTED);
+        }
+    }
 }

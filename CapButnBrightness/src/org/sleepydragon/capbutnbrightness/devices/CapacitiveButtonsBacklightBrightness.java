@@ -29,7 +29,7 @@ public interface CapacitiveButtonsBacklightBrightness {
      * some optimizations compared to when the brightness is set normally that
      * only apply in this situation.
      *
-     * @see #set(int, int)
+     * @see #set
      */
     public static final int OPTION_SCREEN_ON = 0x00000001;
 
@@ -64,6 +64,8 @@ public interface CapacitiveButtonsBacklightBrightness {
      * @param options must be a combination of the OPTION_ constants defined in
      * this class, which influences the behaviour of the method; if none of the
      * options apply, specify 0.
+     * @param notifier an object to be notified when events occur; may be null
+     * to not send notifications of events.
      * @throws IntFileRootHelper.IntWriteException if setting the brightness of
      * the capacitive buttons backlight fails.
      * @throws IllegalArgumentException if the given level is less than 0 or
@@ -72,7 +74,8 @@ public interface CapacitiveButtonsBacklightBrightness {
      * @throws DimBrightnessNotSupportedException if the given level means a
      * "dim" setting but the device does not support dim.
      */
-    public void set(int level, int options)
+    public void set(int level, int options,
+            IntFileRootHelper.OperationNotifier notifier)
             throws IntFileRootHelper.IntWriteException,
             DimBrightnessNotSupportedException;
 
@@ -81,10 +84,13 @@ public interface CapacitiveButtonsBacklightBrightness {
      * value and reverts and changes made to the system that were required to
      * sustain the custom value (eg. chmodding files).
      *
+     * @param notifier an object to be notified when events occur; may be null
+     * to not send notifications of events.
      * @throws IntFileRootHelper.IntWriteException if setting the brightness of
      * the capacitive buttons backlight fails.
      */
-    public void setDefault() throws IntFileRootHelper.IntWriteException;
+    public void setDefault(IntFileRootHelper.OperationNotifier notifier)
+            throws IntFileRootHelper.IntWriteException;
 
     /**
      * Exception thrown if setting the brightness of the capacitive buttons

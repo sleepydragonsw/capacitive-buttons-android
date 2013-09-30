@@ -42,7 +42,7 @@ public class SetCapButtonBrightnessBroadcastReceiver extends BroadcastReceiver {
      * @param settings the settings from which to retrieve the level of the
      * capacitive button brightness to set.
      * @param setOptions is an int that will be specified as the "options"
-     * parameter to {@link CapacitiveButtonsBacklightBrightness#set(int, int)}
+     * parameter to {@link CapacitiveButtonsBacklightBrightness#set}
      * when invoked.
      * @param level the brightness level to set (between 0 and 100).
      * @param context the context object to use.
@@ -61,7 +61,7 @@ public class SetCapButtonBrightnessBroadcastReceiver extends BroadcastReceiver {
 
         if (buttons != null) {
             try {
-                buttons.set(level, setOptions);
+                buttons.set(level, setOptions, null);
             } catch (IntWriteException e) {
                 Log.e(
                     Constants.LOG_TAG,
