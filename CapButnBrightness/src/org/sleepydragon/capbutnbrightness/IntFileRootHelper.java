@@ -123,7 +123,7 @@ public class IntFileRootHelper {
                 notifier.rootRequestStarted();
             }
             try {
-                shell = RootTools.getShell(true);
+                shell = RootTools.getShell(true, 60000);
             } catch (final IOException e) {
                 if (!RootTools.isRootAvailable()) {
                     throw new RootShellNotRootedException(
