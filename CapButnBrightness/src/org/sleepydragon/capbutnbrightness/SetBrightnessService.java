@@ -103,13 +103,6 @@ public class SetBrightnessService extends IntentService {
     public static final String KEY_MESSAGE = "message";
 
     /**
-     * The brightness levels.
-     */
-    public static enum Level {
-        OFF, DIM, BRIGHT, DEFAULT,
-    }
-
-    /**
      * Creates a new instance of SetBrightnessService.
      */
     public SetBrightnessService() {
@@ -127,6 +120,19 @@ public class SetBrightnessService extends IntentService {
         } else {
             throw new RuntimeException("unsupported action: " + action);
         }
+    }
+
+    private void setBrightness(Intent intent) {
+        final String levelName = intent.getStringExtra(EXTRA_NAME_LEVEL);
+        if (levelName == null) {
+            throw new RuntimeException("intent must define extra: "
+                + EXTRA_NAME_LEVEL);
+        }
+        final Level level = Level.valueOf(levelName);
+
+        final Messenger messenger =
+            intent.getParcelableExtra(EXTRA_NAME_MESSENGER);
+        this.setBrightness(level, messenger);
     }
 
     private void setBrightness(Level level, Messenger messenger) {
@@ -198,19 +204,6 @@ public class SetBrightnessService extends IntentService {
         } else {
             this.stopService(serviceIntent);
         }
-    }
-
-    private void setBrightness(Intent intent) {
-        final String levelName = intent.getStringExtra(EXTRA_NAME_LEVEL);
-        if (levelName == null) {
-            throw new RuntimeException("intent must define extra: "
-                + EXTRA_NAME_LEVEL);
-        }
-        final Level level = Level.valueOf(levelName);
-
-        final Messenger messenger =
-            intent.getParcelableExtra(EXTRA_NAME_MESSENGER);
-        this.setBrightness(level, messenger);
     }
 
     public static String formatSetBrightnessErrorMessage(Exception e,
@@ -366,6 +359,13 @@ public class SetBrightnessService extends IntentService {
         } catch (final RemoteException e) {
             Log.e(Constants.LOG_TAG, "Sending message failed", e);
         }
+    }
+
+    /**
+     * The brightness levels.
+     */
+    public static enum Level {
+        OFF, DIM, BRIGHT, DEFAULT,
     }
 
     private static class OperationNotifierMessageSender implements
