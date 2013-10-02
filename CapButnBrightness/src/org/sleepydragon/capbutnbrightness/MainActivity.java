@@ -105,8 +105,8 @@ public class MainActivity extends Activity implements View.OnClickListener {
         final SetBrightnessService.Level level = this.getBrightnessLevel(view);
         final Handler handler = new SetBrightnessMessageHandler(this);
         final Messenger messenger = new Messenger(handler);
-        SetBrightnessService.queueButtonBacklightBrightnessChange(level, this,
-            messenger);
+        SetBrightnessService.queueButtonBacklightBrightnessChange(level, 0,
+            true, this, messenger);
     }
 
     private void showError(String message) {

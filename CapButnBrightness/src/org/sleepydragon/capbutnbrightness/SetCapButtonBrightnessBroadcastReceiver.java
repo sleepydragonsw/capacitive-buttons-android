@@ -16,11 +16,7 @@
  */
 package org.sleepydragon.capbutnbrightness;
 
-import org.sleepydragon.capbutnbrightness.IntFileRootHelper.IntWriteException;
 import org.sleepydragon.capbutnbrightness.devices.CapacitiveButtonsBacklightBrightness;
-import org.sleepydragon.capbutnbrightness.devices.DeviceInfo;
-import org.sleepydragon.capbutnbrightness.devices.DeviceInfoDatabase;
-import org.sleepydragon.capbutnbrightness.devices.CapacitiveButtonsBacklightBrightness.DimBrightnessNotSupportedException;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -32,55 +28,6 @@ import android.util.Log;
  * value.
  */
 public class SetCapButtonBrightnessBroadcastReceiver extends BroadcastReceiver {
-
-    /**
-     * Sets the capacitive button brightness to the level retrieved from the
-     * given Settings. If the level retrieved from the settings is null, then
-     * this method does nothing. Any exceptions thrown during settings of the
-     * capacitive button brightness will be logged in logcat.
-     *
-     * @param settings the settings from which to retrieve the level of the
-     * capacitive button brightness to set.
-     * @param setOptions is an int that will be specified as the "options"
-     * parameter to {@link CapacitiveButtonsBacklightBrightness#set}
-     * when invoked.
-     * @param level the brightness level to set (between 0 and 100).
-     * @param context the context object to use.
-     * @throws NullPointerException if settings==null.
-     */
-    public void doSetCapButtonBrightness(Settings settings, int setOptions,
-            int level, Context context) {
-        if (settings == null) {
-            throw new NullPointerException("settings==null");
-        }
-
-        final DeviceInfoDatabase db = new DeviceInfoDatabase();
-        final DeviceInfo device = db.getForCurrentDevice();
-        final CapacitiveButtonsBacklightBrightness buttons =
-            device.getCapacitiveButtonsBacklightBrightness();
-
-        if (buttons != null) {
-            try {
-                buttons.set(level, setOptions, null);
-            } catch (IntWriteException e) {
-                Log.e(
-                    Constants.LOG_TAG,
-                    "setting capacitive buttons brightness from widget failed",
-                    e);
-                final String message =
-                        SetBrightnessService.formatSetBrightnessErrorMessage(e, context);
-                Log.e(Constants.LOG_TAG, message);
-            } catch (DimBrightnessNotSupportedException e) {
-                Log.e(
-                    Constants.LOG_TAG,
-                    "setting capacitive buttons brightness from widget failed",
-                    e);
-                final String message =
-                        SetBrightnessService.formatSetBrightnessErrorMessage(e, context);
-                Log.e(Constants.LOG_TAG, message);
-            }
-        }
-    }
 
     /**
      * Runs this broadcast receiver. This method first gets the Settings object,
@@ -103,11 +50,6 @@ public class SetCapButtonBrightnessBroadcastReceiver extends BroadcastReceiver {
         final boolean shouldRun;
         if (action != null && action.equals(Intent.ACTION_BOOT_COMPLETED)) {
             shouldRun = settings.isSetBrightnessOnBootEnabled();
-
-            // start the service to respond to the screen turning on
-            final Intent serviceIntent = new Intent();
-            serviceIntent.setClass(context, ScreenPowerOnService.class);
-            context.startService(serviceIntent);
         } else {
             shouldRun = true;
         }
@@ -121,14 +63,19 @@ public class SetCapButtonBrightnessBroadcastReceiver extends BroadcastReceiver {
                 setOptions = 0;
             }
 
-            final int levelAsInt;
+            final SetBrightnessService.Level levelObj;
             if (action != null && action.equals(Intent.ACTION_SCREEN_OFF)) {
-                levelAsInt = 0;
+                levelObj = SetBrightnessService.Level.OFF;
+            } else if (level == 0) {
+                levelObj = SetBrightnessService.Level.OFF;
+            } else if (level == 100) {
+                levelObj = SetBrightnessService.Level.BRIGHT;
             } else {
-                levelAsInt = level.intValue();
+                levelObj = SetBrightnessService.Level.DIM;
             }
 
-            this.doSetCapButtonBrightness(settings, setOptions, levelAsInt, context);
+            SetBrightnessService.queueButtonBacklightBrightnessChange(levelObj,
+                setOptions, false, context, null);
         }
     }
 

@@ -65,6 +65,24 @@ public class SetBrightnessService extends IntentService {
     public static final String EXTRA_NAME_LEVEL = "level";
 
     /**
+     * The name of an integer extra on the intent that specifies the options to
+     * specify to {@link CapacitiveButtonsBacklightBrightness#set}.
+     * <p>
+     * If this value is not explicitly specified, then 0 (zero) is used.
+     */
+    public static final String EXTRA_NAME_OPTIONS = "options";
+
+    /**
+     * The name of a boolean extra on the intent that specifies whether or not
+     * the brightness level should be saved as the new desired "brightness"
+     * level; true indicates that it should be saved and false indicates that it
+     * should not be saved.
+     * <p>
+     * If this value is not explicitly specified, then true is used.
+     */
+    public static final String EXTRA_NAME_SAVE = "save";
+
+    /**
      * The name of a Parcelable extra that can be used to send status updates to
      * the caller. This must be a {@link Messenger} object.
      */
@@ -130,12 +148,16 @@ public class SetBrightnessService extends IntentService {
         }
         final Level level = Level.valueOf(levelName);
 
+        final int options = intent.getIntExtra(EXTRA_NAME_OPTIONS, 0);
+        final boolean save = intent.getBooleanExtra(EXTRA_NAME_SAVE, true);
+
         final Messenger messenger =
             intent.getParcelableExtra(EXTRA_NAME_MESSENGER);
-        this.setBrightness(level, messenger);
+        this.setBrightness(level, options, save, messenger);
     }
 
-    private void setBrightness(Level level, Messenger messenger) {
+    private void setBrightness(Level level, int options, boolean save,
+            Messenger messenger) {
         Log.i(Constants.LOG_TAG, "Setting capacitive buttons brightness to: "
             + level);
 
@@ -172,8 +194,10 @@ public class SetBrightnessService extends IntentService {
         }
 
         // save the new brightness level in the settings
-        final Settings settings = new Settings(this);
-        settings.setLevel(levelValue);
+        if (save) {
+            final Settings settings = new Settings(this);
+            settings.setLevel(levelValue);
+        }
 
         // send a notification to the widgets to update their image
         ButtonBrightnessAppWidgetProvider.postUpdateWidgets(this);
@@ -185,7 +209,7 @@ public class SetBrightnessService extends IntentService {
             if (levelValue == null) {
                 buttons.setDefault(notifier);
             } else {
-                buttons.set(levelValue, 0, notifier);
+                buttons.set(levelValue, options, notifier);
             }
         } catch (final Exception e) {
             final String message = formatSetBrightnessErrorMessage(e, this);
@@ -289,6 +313,11 @@ public class SetBrightnessService extends IntentService {
      * performed asynchronously in another thread.
      *
      * @param level the brightness level to set.
+     * @param options options to be passed on to the call to
+     * {@link CapacitiveButtonsBacklightBrightness#set}.
+     * @param saveSetting whether or not to save the brightness setting as the
+     * new desired level; true indicates that it should be saved, false
+     * indicates that it should not be saved.
      * @param context the context to use to launch the service.
      * @param messenger an optional messenger to be notified of events that
      * occur while attempting to set the brightness; may be null to not receive
@@ -296,7 +325,8 @@ public class SetBrightnessService extends IntentService {
      * @throws NullPointerException if level==null.
      */
     public static void queueButtonBacklightBrightnessChange(Level level,
-            Context context, Messenger messenger) {
+            int options, boolean saveSetting, Context context,
+            Messenger messenger) {
         if (level == null) {
             throw new NullPointerException("level==null");
         }
@@ -307,6 +337,8 @@ public class SetBrightnessService extends IntentService {
 
         final String levelName = level.name();
         intent.putExtra(EXTRA_NAME_LEVEL, levelName);
+        intent.putExtra(EXTRA_NAME_OPTIONS, options);
+        intent.putExtra(EXTRA_NAME_SAVE, saveSetting);
 
         if (messenger != null) {
             intent.putExtra(EXTRA_NAME_MESSENGER, messenger);

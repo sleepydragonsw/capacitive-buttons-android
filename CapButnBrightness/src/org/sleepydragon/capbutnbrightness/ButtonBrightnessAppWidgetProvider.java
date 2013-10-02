@@ -124,7 +124,7 @@ public class ButtonBrightnessAppWidgetProvider extends AppWidgetProvider {
     private static void setNextBrightnessLevel(Context context) {
         final SetBrightnessService.Level newLevel =
             getNextBrightnessLevel(context);
-        SetBrightnessService.queueButtonBacklightBrightnessChange(newLevel,
-            context, null);
+        SetBrightnessService.queueButtonBacklightBrightnessChange(newLevel, 0,
+            true, context, null);
     }
 }
