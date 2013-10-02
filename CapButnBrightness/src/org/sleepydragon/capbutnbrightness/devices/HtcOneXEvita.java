@@ -62,13 +62,6 @@ public class HtcOneXEvita implements CapacitiveButtonsBacklightBrightness,
             throw new IllegalArgumentException("invalid level: " + level);
         }
 
-        // on evita, there is nothing special to do when the screen turns on
-        final boolean inResponseToScreenOn =
-            ((options & OPTION_SCREEN_ON) == OPTION_SCREEN_ON);
-        if (inResponseToScreenOn) {
-            return;
-        }
-
         final boolean backlightOn = (level != 0);
         IntFileRootHelper intFile = new IntFileRootHelper(notifier);
 
