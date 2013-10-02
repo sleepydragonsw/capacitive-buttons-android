@@ -16,19 +16,12 @@
  */
 package org.sleepydragon.capbutnbrightness;
 
-import org.sleepydragon.capbutnbrightness.IntFileRootHelper.IntWriteException;
-import org.sleepydragon.capbutnbrightness.devices.CapacitiveButtonsBacklightBrightness;
-import org.sleepydragon.capbutnbrightness.devices.CapacitiveButtonsBacklightBrightness.DimBrightnessNotSupportedException;
-import org.sleepydragon.capbutnbrightness.devices.DeviceInfo;
-import org.sleepydragon.capbutnbrightness.devices.DeviceInfoDatabase;
-
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 import android.widget.RemoteViews;
 
 /**
@@ -40,61 +33,7 @@ public class ButtonBrightnessAppWidgetProvider extends AppWidgetProvider {
     public void onReceive(Context context, Intent intent) {
         // NextBrightnessLevel is broadcasted when the widget is clicked
         if ("NextBrightnessLevel".equals(intent.getAction())) {
-
-            // get the current brightness setting and calculate what the
-            // "next level is
-            final Settings settings = new Settings(context);
-            final Integer level = settings.getLevel();
-            Integer newLevel;
-            if (level == null) {
-                newLevel = 2;
-            } else if (level == 0) {
-                newLevel = 50;
-            } else if (level == 100) {
-                newLevel = 0;
-            } else {
-                newLevel = 100;
-            }
-
-            // set the next level and post the broadcast to update the image
-            // that is displayed in the widget
-            settings.setLevel(newLevel);
-            postUpdateWidgets(context);
-
-            // copied from MainActivity.onClick() and onCreate() to actually
-            // set the capacitive buttons brightness; should really be
-            // refactored since this is copied code
-            final DeviceInfoDatabase devices = new DeviceInfoDatabase();
-            final DeviceInfo device = devices.getForCurrentDevice();
-            final CapacitiveButtonsBacklightBrightness buttons =
-                device.getCapacitiveButtonsBacklightBrightness();
-            if (buttons != null) {
-                try {
-                    assert newLevel != null;
-                    buttons.set(newLevel, 0, null);
-                } catch (IntWriteException e) {
-                    Log.e(
-                        Constants.LOG_TAG,
-                        "setting capacitive buttons brightness from widget failed",
-                        e);
-                    final String message =
-                            SetBrightnessService.formatSetBrightnessErrorMessage(e, context);
-                    Log.e(Constants.LOG_TAG, message);
-                } catch (DimBrightnessNotSupportedException e) {
-                    Log.e(
-                        Constants.LOG_TAG,
-                        "setting capacitive buttons brightness from widget failed",
-                        e);
-                    final String message =
-                            SetBrightnessService.formatSetBrightnessErrorMessage(e, context);
-                    Log.e(Constants.LOG_TAG, message);
-                }
-            }
-
-            // start the service to respond to the screen turning on
-            final Intent serviceIntent = new Intent();
-            serviceIntent.setClass(context, ScreenPowerOnService.class);
-            context.startService(serviceIntent);
+            setNextBrightnessLevel(context);
         } else {
             super.onReceive(context, intent);
         }
@@ -124,6 +63,23 @@ public class ButtonBrightnessAppWidgetProvider extends AppWidgetProvider {
 
             // update the widget
             appWidgetManager.updateAppWidget(appWidgetId, views);
+        }
+    }
+
+    private static SetBrightnessService.Level getNextBrightnessLevel(
+            Context context) {
+        // get the current brightness setting and calculate the "next" level
+        final Settings settings = new Settings(context);
+        final Integer level = settings.getLevel();
+
+        if (level == null) {
+            return SetBrightnessService.Level.BRIGHT;
+        } else if (level == 0) {
+            return SetBrightnessService.Level.DIM;
+        } else if (level == 100) {
+            return SetBrightnessService.Level.OFF;
+        } else {
+            return SetBrightnessService.Level.BRIGHT;
         }
     }
 
@@ -163,5 +119,12 @@ public class ButtonBrightnessAppWidgetProvider extends AppWidgetProvider {
             displayedChildIndex = 1;
         }
         views.setDisplayedChild(R.id.widgetFlipper, displayedChildIndex);
+    }
+
+    private static void setNextBrightnessLevel(Context context) {
+        final SetBrightnessService.Level newLevel =
+            getNextBrightnessLevel(context);
+        SetBrightnessService.queueButtonBacklightBrightnessChange(newLevel,
+            context, null);
     }
 }
