@@ -291,6 +291,37 @@ public class SetBrightnessService extends IntentService {
         return message;
     }
 
+    /**
+     * Schedules setting of the capacitive buttons backlight brightness to be
+     * performed asynchronously in another thread.
+     *
+     * @param level the brightness level to set.
+     * @param context the context to use to launch the service.
+     * @param messenger an optional messenger to be notified of events that
+     * occur while attempting to set the brightness; may be null to not receive
+     * any such notifications.
+     * @throws NullPointerException if level==null.
+     */
+    public static void queueButtonBacklightBrightnessChange(Level level,
+            Context context, Messenger messenger) {
+        if (level == null) {
+            throw new NullPointerException("level==null");
+        }
+
+        final Intent intent = new Intent();
+        intent.setAction(ACTION_SET_BRIGHTNESS);
+        intent.setClass(context, SetBrightnessService.class);
+
+        final String levelName = level.name();
+        intent.putExtra(EXTRA_NAME_LEVEL, levelName);
+
+        if (messenger != null) {
+            intent.putExtra(EXTRA_NAME_MESSENGER, messenger);
+        }
+
+        context.startService(intent);
+    }
+
     private static void reportError(Messenger messenger, String messageText,
             Exception exception) {
 

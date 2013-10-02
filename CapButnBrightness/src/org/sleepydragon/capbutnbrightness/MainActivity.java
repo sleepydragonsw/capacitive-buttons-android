@@ -103,16 +103,10 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
     private void setBrightnessFromButton(View view) {
         final SetBrightnessService.Level level = this.getBrightnessLevel(view);
-        final Intent intent = new Intent();
-        intent.setAction(SetBrightnessService.ACTION_SET_BRIGHTNESS);
-        intent.putExtra(SetBrightnessService.EXTRA_NAME_LEVEL, level.name());
-        intent.setClass(this, SetBrightnessService.class);
-
         final Handler handler = new SetBrightnessMessageHandler(this);
         final Messenger messenger = new Messenger(handler);
-        intent.putExtra(SetBrightnessService.EXTRA_NAME_MESSENGER, messenger);
-
-        this.startService(intent);
+        SetBrightnessService.queueButtonBacklightBrightnessChange(level, this,
+            messenger);
     }
 
     private void showError(String message) {
