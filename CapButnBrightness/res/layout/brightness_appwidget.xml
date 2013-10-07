@@ -10,20 +10,20 @@
         android:contentDescription="@string/btn_off"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:src="@drawable/brightness_off" />
+        android:src="@drawable/brightness_widget_off" />
 
     <ImageView
         android:id="@+id/btnDim"
         android:contentDescription="@string/btn_dim"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:src="@drawable/brightness_dim" />
+        android:src="@drawable/brightness_widget_dim" />
 
     <ImageView
         android:id="@+id/btnBright"
         android:contentDescription="@string/btn_bright"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:src="@drawable/brightness_bright" />
+        android:src="@drawable/brightness_widget_bright" />
 
 </ViewFlipper>
