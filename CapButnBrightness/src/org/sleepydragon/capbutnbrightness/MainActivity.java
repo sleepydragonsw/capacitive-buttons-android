@@ -176,7 +176,6 @@ public class MainActivity extends Activity implements View.OnClickListener {
                 builder.setTitle("Superuser Access");
                 dialog = builder.create();
                 dialog.show();
-                Log.e("DENVER", "Showing dialog: " + dialog);
                 this.rootAlertRef = new WeakReference<AlertDialog>(dialog);
             }
         }
@@ -187,8 +186,6 @@ public class MainActivity extends Activity implements View.OnClickListener {
                 this.rootAlertRef = null;
                 final AlertDialog dialog = dialogRef.get();
                 if (dialog != null) {
-                    Log.e("DENVER", "Dismissing dialog: " + dialog);
-                    Log.e("DENVER", "dialog.isShowing(): " + dialog.isShowing());
                     dialog.dismiss();
                 }
             }
