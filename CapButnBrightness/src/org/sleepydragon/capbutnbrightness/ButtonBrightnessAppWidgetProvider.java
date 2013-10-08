@@ -22,6 +22,7 @@ import android.appwidget.AppWidgetProvider;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.widget.RemoteViews;
 
 /**
@@ -31,6 +32,10 @@ public class ButtonBrightnessAppWidgetProvider extends AppWidgetProvider {
 
     @Override
     public void onReceive(Context context, Intent intent) {
+        Log.i(Constants.LOG_TAG,
+            "ButtonBrightnessAppWidgetProvider.onReceive() " + "action="
+                + intent.getAction());
+
         // NextBrightnessLevel is broadcasted when the widget is clicked
         if ("NextBrightnessLevel".equals(intent.getAction())) {
             setNextBrightnessLevel(context);
