@@ -69,8 +69,67 @@ class ImportNewRFilter(FileFilter):
     def error_message():
         return "line not found: {}".format(self.LINE_PREFIX)
 
+class UpgradeBannerLayoutXmlFilter(FileFilter):
+    BEGIN_LINE = "<!-- Begin upgrade banner -->"
+    END_LINE = "<!-- End upgrade banner -->"
+    def __init__(self):
+        self.begin_found = False
+        self.end_found = False
+        self.match_found = False
+    def filter(self, line):
+        if line.strip() == self.BEGIN_LINE:
+            self.begin_found = True
+        elif line.strip() == self.END_LINE:
+            self.end_found = True
+        self.match_found = self.begin_found and self.end_found
+        if not self.begin_found and not self.end_found:
+            yield line
+        elif self.begin_found and self.end_found:
+            yield line
+    def error_message():
+        if not self.begin_found:
+            return "line not found: {}".format(self.BEGIN_LINE)
+        elif not self.end_found:
+            return "line not found: {}".format(self.END_LINE)
+
+class UpgradeBannerJavaFilter(FileFilter):
+    LINE1 = "final View btnUpgrade = this.findViewById(R.id.btnUpgrade);"
+    LINE2 = "btnUpgrade.setOnClickListener(this);"
+    LINE3 = "if (view.getId() == R.id.btnUpgrade) {"
+    def __init__(self):
+        self.line1_found = False
+        self.line2_found = False
+        self.line3_found = False
+        self.match_found = False
+    def filter(self, line):
+        if line.strip() == self.LINE1:
+            self.line1_found = True
+        elif line.strip() == self.LINE2:
+            self.line2_found = True
+        elif line.strip() == self.LINE3:
+            self.line3_found = True
+            i = line.find(self.LINE3)
+            newline = line[len(line.rstrip()):]
+            yield line[:i] + "if (1 == 2) {" + newline
+        else:
+            yield line
+        self.match_found = (self.line1_found and self.line2_found
+            and self.line3_found)
+    def error_message():
+        missing_lines = []
+        if not self.line1_found:
+            missing_lines.append(self.LINE1)
+        if not self.line2_found:
+            missing_lines.append(self.LINE2)
+        if not self.line3_found:
+            missing_lines.append(self.LINE3)
+        return "{} lines not found: {}".format(
+            len(missing_lines),
+            ", ".join('"{}"'.format(x) for x in missing_lines))
+
 filters = [
     ("AndroidManifest.xml", AndroidManifestFilter()),
+    ("res/layout/activity_main.xml", UpgradeBannerLayoutXmlFilter()),
     ("res/values/strings.xml", VersionStringFilter()),
     ("res/values/strings.xml", AppNameStringFilter()),
     ("res/values/strings.xml", AppTitleStringFilter()),
@@ -79,6 +138,7 @@ filters = [
     ("src/org/sleepydragon/capbutnbrightness/ButtonBrightnessAppWidgetProvider.java", ImportNewRFilter()),
     ("src/org/sleepydragon/capbutnbrightness/CreditsActivity.java", ImportNewRFilter()),
     ("src/org/sleepydragon/capbutnbrightness/MainActivity.java", ImportNewRFilter()),
+    ("src/org/sleepydragon/capbutnbrightness/MainActivity.java", UpgradeBannerJavaFilter()),
     ("src/org/sleepydragon/capbutnbrightness/SetBrightnessService.java", ImportNewRFilter()),
     ("src/org/sleepydragon/capbutnbrightness/SettingsActivity.java", ImportNewRFilter()),
     ("src/org/sleepydragon/capbutnbrightness/debug/DebugActivity.java", FixRImportFilter()),
