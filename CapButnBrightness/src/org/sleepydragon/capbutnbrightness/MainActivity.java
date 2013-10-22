@@ -72,11 +72,8 @@ public class MainActivity extends Activity implements View.OnClickListener {
         final View btnDim = this.findViewById(R.id.btnDim);
         btnDim.setOnClickListener(this);
 
-        // btnUpgrade==null in the pro version
         final View btnUpgrade = this.findViewById(R.id.btnUpgrade);
-        if (btnUpgrade != null) {
-            btnUpgrade.setOnClickListener(this);
-        }
+        btnUpgrade.setOnClickListener(this);
     }
 
     @Override
