@@ -1,8 +1,8 @@
 <resources>
 
     <string name="app_name">Capacitive Buttons</string>
-    <string name="app_version">1.0.10</string>
-    <string name="app_version_display">1.0.10</string>
+    <string name="app_version">1.0.11</string>
+    <string name="app_version_display">1.0.11</string>
     <string name="title_activity_main">Capacitive Buttons</string>
     <string name="btn_credits">Credits</string>
     <string name="btn_off">Off</string>
