@@ -18,8 +18,11 @@ package org.sleepydragon.capbutnbrightness.devices;
 
 import java.io.File;
 
+import org.sleepydragon.capbutnbrightness.Constants;
 import org.sleepydragon.capbutnbrightness.IntFileRootHelper;
 import org.sleepydragon.capbutnbrightness.debug.DebugFilesProvider;
+
+import android.util.Log;
 
 /**
  * A specialization of CapacitiveButtonsBacklightBrightness for the HTC One X.
@@ -109,14 +112,23 @@ public class HtcOneXEndeavoru implements CapacitiveButtonsBacklightBrightness,
             throws IntFileRootHelper.IntWriteException {
         try {
             this.set(100, 0, notifier);
-            if (new File(CURRENTS_PATH).exists()) {
-                IntFileRootHelper.makeWritable(CURRENTS_PATH);
-            }
-            if (new File(BRIGHTNESS_PATH).exists()) {
-                IntFileRootHelper.makeWritable(BRIGHTNESS_PATH);
-            }
         } catch (DimBrightnessNotSupportedException e) {
             throw new RuntimeException("should never happen: " + e);
+        }
+
+        try {
+            IntFileRootHelper.makeWritable(CURRENTS_PATH);
+        } catch (IntFileRootHelper.ChmodFailedException e) {
+            Log.w(Constants.LOG_TAG,
+                "unable to make file writeable when restoring default: "
+                    + CURRENTS_PATH, e);
+        }
+        try {
+            IntFileRootHelper.makeWritable(BRIGHTNESS_PATH);
+        } catch (IntFileRootHelper.ChmodFailedException e) {
+            Log.w(Constants.LOG_TAG,
+                "unable to make file writeable when restoring default: "
+                    + BRIGHTNESS_PATH, e);
         }
     }
 }
