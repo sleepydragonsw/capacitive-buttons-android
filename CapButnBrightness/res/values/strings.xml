@@ -25,7 +25,7 @@
          the capacitive buttons brightness -->
 
     <string name="set_error_dim_not_supported">This device, ROM, or kernel does
-        not support setting the brigtness to "dim": %s</string>
+        not support setting the brightness to "dim": %s</string>
     <string name="set_error_chmod_failed">Changing permissions of file failed:
         %1$s (%2$s)</string>
     <string name="set_error_chown_exit_code">Changing ownership of file %1$s
