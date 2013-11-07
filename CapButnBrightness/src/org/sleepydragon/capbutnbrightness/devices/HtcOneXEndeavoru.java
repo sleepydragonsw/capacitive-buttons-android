@@ -45,7 +45,7 @@ public class HtcOneXEndeavoru extends CapacitiveButtonsBacklightBrightness {
             return;
         }
 
-        final boolean dim = (level != 100);
+        final boolean dim = (level != 0 && level != 100);
         final boolean dimSupported = this.isDimSupported();
         if (dim && !dimSupported) {
             throw new DimBrightnessNotSupportedException(
