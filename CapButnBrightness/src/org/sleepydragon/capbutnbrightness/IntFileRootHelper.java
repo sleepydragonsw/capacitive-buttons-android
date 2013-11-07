@@ -64,7 +64,7 @@ public class IntFileRootHelper {
     /**
      * Object that gets notified of events.
      */
-    private OperationNotifier notifier;
+    private final OperationNotifier notifier;
 
     /**
      * The object to be synchronized on when accessing nextCommandId.
@@ -647,6 +647,23 @@ public class IntFileRootHelper {
     }
 
     /**
+     * Interface that can be implemented to be notified when events occur.
+     */
+    public static interface OperationNotifier {
+
+        /**
+         * Invoked when a request for root privileges completes.
+         */
+        public void rootRequestCompleted();
+
+        /**
+         * Invoked when a request for root privileges starts.
+         */
+        public void rootRequestStarted();
+
+    }
+
+    /**
      * Exception thrown if creating a root shell fails due to root access being
      * denied.
      */
@@ -765,22 +782,5 @@ public class IntFileRootHelper {
         public int getErrno() {
             return this.errno;
         }
-    }
-
-    /**
-     * Interface that can be implemented to be notified when events occur.
-     */
-    public static interface OperationNotifier {
-
-        /**
-         * Invoked when a request for root privileges starts.
-         */
-        public void rootRequestStarted();
-
-        /**
-         * Invoked when a request for root privileges completes.
-         */
-        public void rootRequestCompleted();
-
     }
 }

@@ -47,7 +47,7 @@ public abstract class CapacitiveButtonsBacklightBrightness implements
      * response to the screen turning on. In this case, the method may perform
      * some optimizations compared to when the brightness is set normally that
      * only apply in this situation.
-     * 
+     *
      * @see #set
      */
     public static final int OPTION_SCREEN_ON = 0x00000001;
@@ -61,7 +61,7 @@ public abstract class CapacitiveButtonsBacklightBrightness implements
     /**
      * Returns the default brightness level to use when the "dim" option is
      * selected by a user.
-     * 
+     *
      * @return the default brightness level to use when the "dim" option is
      * selected by a user; this value will be greater than or equal to 0 and
      * less than or equal to 100.
@@ -75,7 +75,7 @@ public abstract class CapacitiveButtonsBacklightBrightness implements
      * capacitive buttons brightness of this device to be supported. This method
      * is invoked by the implementation of {@link #isSupported} to determine if
      * this device is supported.
-     * 
+     *
      * @return a non-null array of non-null Strings whose values are the paths
      * of the files that must exist in order to be supported.
      */
@@ -86,7 +86,7 @@ public abstract class CapacitiveButtonsBacklightBrightness implements
      * supported. The implementation of this method in this class returns true
      * if and only if every files returned by {@link #getRequiredFiles()}
      * exists.
-     * 
+     *
      * @return true if setting the capacitive button brightness is supported;
      * false if it is not supported.
      */
@@ -106,7 +106,7 @@ public abstract class CapacitiveButtonsBacklightBrightness implements
      * <p>
      * If this device does not actually support the given brightness level then
      * the implementation will choose an appropriate alternative.
-     * 
+     *
      * @param level a value between 0 and 100, inclusive, where 0 is completely
      * off, 100 is completely on, and any value in between is on but not with
      * full brightness.
@@ -132,7 +132,7 @@ public abstract class CapacitiveButtonsBacklightBrightness implements
      * Sets the brightness of the capacitive buttons backlight to its default
      * value and reverts and changes made to the system that were required to
      * sustain the custom value (eg. chmodding files).
-     * 
+     *
      * @param notifier an object to be notified when events occur; may be null
      * to not send notifications of events.
      * @throws IntFileRootHelper.IntWriteException if setting the brightness of
