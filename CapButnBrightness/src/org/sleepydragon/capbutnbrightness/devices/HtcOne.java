@@ -16,46 +16,16 @@
  */
 package org.sleepydragon.capbutnbrightness.devices;
 
-import java.io.File;
-
-import org.sleepydragon.capbutnbrightness.Constants;
 import org.sleepydragon.capbutnbrightness.IntFileRootHelper;
-import org.sleepydragon.capbutnbrightness.debug.DebugFilesProvider;
-
-import android.util.Log;
 
 /**
  * A specialization of CapacitiveButtonsBacklightBrightness for the HTC One
  * (m7).
  */
-public class HtcOne implements CapacitiveButtonsBacklightBrightness,
-        DebugFilesProvider {
+public class HtcOne extends CapacitiveButtonsBacklightBrightness {
 
-    public static final String BUTTONS_BACKLIGHT_DIR =
-        "/sys/class/leds/button-backlight";
-    public static final String CURRENTS_PATH = BUTTONS_BACKLIGHT_DIR
-        + "/currents";
-    public static final String BRIGHTNESS_PATH = BUTTONS_BACKLIGHT_DIR
-        + "/brightness";
-    public static final String LUT_COEFFICIENT_PATH = BUTTONS_BACKLIGHT_DIR
-        + "/lut_coefficient";
-
-    public HtcOne() {
-    }
-
-    public FileInfo[] getDebugFiles() {
-        return new FileInfo[] { new FileInfo(CURRENTS_PATH, FileContents.INT),
-            new FileInfo(BRIGHTNESS_PATH, FileContents.INT),
-            new FileInfo(LUT_COEFFICIENT_PATH, FileContents.INT), };
-    }
-
-    public int getDefaultDimLevel() {
-        return 50;
-    }
-
-    public boolean isSupported() {
-        final boolean exists = new File(CURRENTS_PATH).exists();
-        return exists;
+    public String[] getRequiredFiles() {
+        return new String[] { CURRENTS_PATH };
     }
 
     public void set(int level, int options,
@@ -66,7 +36,7 @@ public class HtcOne implements CapacitiveButtonsBacklightBrightness,
             throw new IllegalArgumentException("invalid level: " + level);
         }
 
-        IntFileRootHelper intFile = new IntFileRootHelper(notifier);
+        final IntFileRootHelper intFile = new IntFileRootHelper(notifier);
         try {
             final boolean backlightOn = (level != 0);
             if (!backlightOn) {
@@ -81,27 +51,4 @@ public class HtcOne implements CapacitiveButtonsBacklightBrightness,
         }
     }
 
-    public void setDefault(IntFileRootHelper.OperationNotifier notifier)
-            throws IntFileRootHelper.IntWriteException {
-        try {
-            this.set(100, 0, notifier);
-        } catch (DimBrightnessNotSupportedException e) {
-            throw new RuntimeException("should never happen: " + e);
-        }
-
-        try {
-            IntFileRootHelper.makeWritable(CURRENTS_PATH);
-        } catch (IntFileRootHelper.ChmodFailedException e) {
-            Log.w(Constants.LOG_TAG,
-                "unable to make file writeable when restoring default: "
-                    + CURRENTS_PATH, e);
-        }
-        try {
-            IntFileRootHelper.makeWritable(BRIGHTNESS_PATH);
-        } catch (IntFileRootHelper.ChmodFailedException e) {
-            Log.w(Constants.LOG_TAG,
-                "unable to make file writeable when restoring default: "
-                    + BRIGHTNESS_PATH, e);
-        }
-    }
 }

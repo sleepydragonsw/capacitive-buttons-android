@@ -16,48 +16,97 @@
  */
 package org.sleepydragon.capbutnbrightness.devices;
 
+import java.io.File;
+
+import org.sleepydragon.capbutnbrightness.Constants;
 import org.sleepydragon.capbutnbrightness.IntFileRootHelper;
+import org.sleepydragon.capbutnbrightness.debug.DebugFilesProvider;
+
+import android.util.Log;
 
 /**
  * Methods that control the brightness of the capacitive buttons backlight.
  */
-public interface CapacitiveButtonsBacklightBrightness {
+public abstract class CapacitiveButtonsBacklightBrightness implements
+        DebugFilesProvider {
+
+    public static final String BUTTONS_BACKLIGHT_DIR =
+        "/sys/class/leds/button-backlight";
+
+    public static final String CURRENTS_PATH = BUTTONS_BACKLIGHT_DIR
+        + "/currents";
+
+    public static final String BRIGHTNESS_PATH = BUTTONS_BACKLIGHT_DIR
+        + "/brightness";
+
+    public static final String LUT_COEFFICIENT_PATH = BUTTONS_BACKLIGHT_DIR
+        + "/lut_coefficient";
 
     /**
      * Option to set() which indicates that the method is being invoked in
      * response to the screen turning on. In this case, the method may perform
      * some optimizations compared to when the brightness is set normally that
      * only apply in this situation.
-     *
+     * 
      * @see #set
      */
     public static final int OPTION_SCREEN_ON = 0x00000001;
 
+    public FileInfo[] getDebugFiles() {
+        return new FileInfo[] { new FileInfo(CURRENTS_PATH, FileContents.INT),
+            new FileInfo(BRIGHTNESS_PATH, FileContents.INT),
+            new FileInfo(LUT_COEFFICIENT_PATH, FileContents.INT), };
+    }
+
     /**
      * Returns the default brightness level to use when the "dim" option is
      * selected by a user.
-     *
+     * 
      * @return the default brightness level to use when the "dim" option is
      * selected by a user; this value will be greater than or equal to 0 and
      * less than or equal to 100.
      */
-    public int getDefaultDimLevel();
+    public int getDefaultDimLevel() {
+        return 50;
+    }
+
+    /**
+     * Returns a list of files that must exist in order for setting of the
+     * capacitive buttons brightness of this device to be supported. This method
+     * is invoked by the implementation of {@link #isSupported} to determine if
+     * this device is supported.
+     * 
+     * @return a non-null array of non-null Strings whose values are the paths
+     * of the files that must exist in order to be supported.
+     */
+    public abstract String[] getRequiredFiles();
 
     /**
      * Returns whether or not setting the capacitive button brightness is
-     * supported.
-     *
+     * supported. The implementation of this method in this class returns true
+     * if and only if every files returned by {@link #getRequiredFiles()}
+     * exists.
+     * 
      * @return true if setting the capacitive button brightness is supported;
      * false if it is not supported.
      */
-    public boolean isSupported();
+    public boolean isSupported() {
+        final String[] paths = this.getRequiredFiles();
+        for (final String path : paths) {
+            final File file = new File(path);
+            if (!file.exists()) {
+                return false;
+            }
+        }
+        return true;
+    }
 
     /**
      * Sets the brightness of the capacitive buttons backlight.
      * <p>
      * If this device does not actually support the given brightness level then
      * the implementation will choose an appropriate alternative.
-     *
+     * 
      * @param level a value between 0 and 100, inclusive, where 0 is completely
      * off, 100 is completely on, and any value in between is on but not with
      * full brightness.
@@ -74,7 +123,7 @@ public interface CapacitiveButtonsBacklightBrightness {
      * @throws DimBrightnessNotSupportedException if the given level means a
      * "dim" setting but the device does not support dim.
      */
-    public void set(int level, int options,
+    public abstract void set(int level, int options,
             IntFileRootHelper.OperationNotifier notifier)
             throws IntFileRootHelper.IntWriteException,
             DimBrightnessNotSupportedException;
@@ -83,14 +132,35 @@ public interface CapacitiveButtonsBacklightBrightness {
      * Sets the brightness of the capacitive buttons backlight to its default
      * value and reverts and changes made to the system that were required to
      * sustain the custom value (eg. chmodding files).
-     *
+     * 
      * @param notifier an object to be notified when events occur; may be null
      * to not send notifications of events.
      * @throws IntFileRootHelper.IntWriteException if setting the brightness of
      * the capacitive buttons backlight fails.
      */
     public void setDefault(IntFileRootHelper.OperationNotifier notifier)
-            throws IntFileRootHelper.IntWriteException;
+            throws IntFileRootHelper.IntWriteException {
+        try {
+            this.set(100, 0, notifier);
+        } catch (final DimBrightnessNotSupportedException e) {
+            throw new RuntimeException("should never happen: " + e);
+        }
+
+        try {
+            IntFileRootHelper.makeWritable(CURRENTS_PATH);
+        } catch (final IntFileRootHelper.ChmodFailedException e) {
+            Log.w(Constants.LOG_TAG,
+                "unable to make file writeable when restoring default: "
+                    + CURRENTS_PATH, e);
+        }
+        try {
+            IntFileRootHelper.makeWritable(BRIGHTNESS_PATH);
+        } catch (final IntFileRootHelper.ChmodFailedException e) {
+            Log.w(Constants.LOG_TAG,
+                "unable to make file writeable when restoring default: "
+                    + BRIGHTNESS_PATH, e);
+        }
+    }
 
     /**
      * Exception thrown if setting the brightness of the capacitive buttons
