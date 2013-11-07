@@ -45,16 +45,18 @@ public class HtcOneXEndeavoru extends CapacitiveButtonsBacklightBrightness {
             return;
         }
 
-        final boolean currentsFileExists = new File(CURRENTS_PATH).isFile();
         final boolean dim = (level != 100);
-        if (dim && !currentsFileExists) {
-            throw new DimBrightnessNotSupportedException("dim is not supported");
+        final boolean dimSupported = this.isDimSupported();
+        if (dim && !dimSupported) {
+            throw new DimBrightnessNotSupportedException(
+                "file does not exist: " + CURRENTS_PATH);
         }
 
         final boolean backlightOn = (level != 0);
         final IntFileRootHelper intFile = new IntFileRootHelper(notifier);
 
         try {
+            final boolean currentsFileExists = new File(CURRENTS_PATH).isFile();
             if (!backlightOn) {
                 intFile.write(BRIGHTNESS_PATH, 0);
                 if (currentsFileExists) {
@@ -78,5 +80,9 @@ public class HtcOneXEndeavoru extends CapacitiveButtonsBacklightBrightness {
         } finally {
             intFile.close();
         }
+    }
+
+    public String[] getRequiredDimFiles() {
+        return new String[] { CURRENTS_PATH };
     }
 }

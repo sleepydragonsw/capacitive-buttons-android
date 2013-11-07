@@ -16,6 +16,8 @@
  */
 package org.sleepydragon.capbutnbrightness;
 
+import org.sleepydragon.capbutnbrightness.devices.CapacitiveButtonsBacklightBrightness;
+
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
@@ -76,11 +78,19 @@ public class ButtonBrightnessAppWidgetProvider extends AppWidgetProvider {
         // get the current brightness setting and calculate the "next" level
         final Settings settings = new Settings(context);
         final Integer level = settings.getLevel();
+        final CapacitiveButtonsBacklightBrightness buttons =
+            SetBrightnessService.getButtonsWhoseBrightnessToSet();
 
         if (level == null) {
             return SetBrightnessService.Level.BRIGHT;
         } else if (level == 0) {
-            return SetBrightnessService.Level.DIM;
+            // skip dim in the cycle if the device does not support dim
+            final boolean dimSupported = buttons.isDimSupported();
+            if (dimSupported) {
+                return SetBrightnessService.Level.DIM;
+            } else {
+                return SetBrightnessService.Level.BRIGHT;
+            }
         } else if (level == 100) {
             return SetBrightnessService.Level.OFF;
         } else {

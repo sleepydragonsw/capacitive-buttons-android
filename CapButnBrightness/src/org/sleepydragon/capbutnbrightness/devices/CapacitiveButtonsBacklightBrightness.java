@@ -72,6 +72,22 @@ public abstract class CapacitiveButtonsBacklightBrightness implements
 
     /**
      * Returns a list of files that must exist in order for setting of the
+     * capacitive buttons brightness of this device to <em>dim</em> to be
+     * supported. This method is invoked by the implementation of
+     * {@link #isDimSupported} to determine if this device is supported.
+     * <p>
+     * The implementation of this method in this class returns an empty array;
+     * subclasses may return a different list.
+     *
+     * @return a non-null array of non-null Strings whose values are the paths
+     * of the files that must exist in order for dim to be supported.
+     */
+    public String[] getRequiredDimFiles() {
+        return new String[0];
+    }
+
+    /**
+     * Returns a list of files that must exist in order for setting of the
      * capacitive buttons brightness of this device to be supported. This method
      * is invoked by the implementation of {@link #isSupported} to determine if
      * this device is supported.
@@ -80,6 +96,21 @@ public abstract class CapacitiveButtonsBacklightBrightness implements
      * of the files that must exist in order to be supported.
      */
     public abstract String[] getRequiredFiles();
+
+    /**
+     * Returns whether or not setting the capacitive button brightness to
+     * <em>dim</em> is supported. The implementation of this method in this
+     * class returns true if and only if every files returned by
+     * {@link #getRequiredDimFiles()} exists.
+     *
+     * @return true if setting the capacitive button brightness to dim is
+     * supported; false if it is not supported.
+     */
+    public boolean isDimSupported() {
+        final String[] paths = this.getRequiredDimFiles();
+        final boolean supported = allFilesExist(paths);
+        return supported;
+    }
 
     /**
      * Returns whether or not setting the capacitive button brightness is
@@ -92,13 +123,8 @@ public abstract class CapacitiveButtonsBacklightBrightness implements
      */
     public boolean isSupported() {
         final String[] paths = this.getRequiredFiles();
-        for (final String path : paths) {
-            final File file = new File(path);
-            if (!file.exists()) {
-                return false;
-            }
-        }
-        return true;
+        final boolean supported = allFilesExist(paths);
+        return supported;
     }
 
     /**
@@ -160,6 +186,16 @@ public abstract class CapacitiveButtonsBacklightBrightness implements
                 "unable to make file writeable when restoring default: "
                     + BRIGHTNESS_PATH, e);
         }
+    }
+
+    private static boolean allFilesExist(String[] paths) {
+        for (final String path : paths) {
+            final File file = new File(path);
+            if (!file.exists()) {
+                return false;
+            }
+        }
+        return true;
     }
 
     /**

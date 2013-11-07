@@ -156,15 +156,21 @@ public class SetBrightnessService extends IntentService {
         this.setBrightness(level, options, save, messenger);
     }
 
+    public static CapacitiveButtonsBacklightBrightness getButtonsWhoseBrightnessToSet() {
+        final DeviceInfoDatabase devices = new DeviceInfoDatabase();
+        final DeviceInfo device = devices.getForCurrentDevice();
+        final CapacitiveButtonsBacklightBrightness buttons =
+            device.getCapacitiveButtonsBacklightBrightness();
+        return buttons;
+    }
+
     private void setBrightness(Level level, int options, boolean save,
             Messenger messenger) {
         Log.i(Constants.LOG_TAG, "Setting capacitive buttons brightness to: "
             + level);
 
-        final DeviceInfoDatabase devices = new DeviceInfoDatabase();
-        final DeviceInfo device = devices.getForCurrentDevice();
         final CapacitiveButtonsBacklightBrightness buttons =
-            device.getCapacitiveButtonsBacklightBrightness();
+            getButtonsWhoseBrightnessToSet();
 
         // fail immediately if setting the brightness is not supported
         if (buttons == null) {
