@@ -163,6 +163,33 @@ public abstract class CapacitiveButtonsBacklightBrightness implements
     }
 
     /**
+     * Changes the permissions of all files to read-only, to prevent the OS from
+     * messing with them. On failure, a warning is logged but no exceptions are
+     * thrown.
+     *
+     * @param intFile the IntFileRootHelper to use to access the files.
+     * @throws NullPointerException if intFile==null.
+     */
+    protected static void makeAllFilesReadOnly(IntFileRootHelper intFile) {
+        if (intFile == null) {
+            throw new NullPointerException("intFile==null");
+        }
+        final String[] paths = { CURRENTS_PATH, BRIGHTNESS_PATH };
+        for (final String path : paths) {
+            final File file = new File(path);
+            if (file.exists()) {
+                try {
+                    intFile.protectFileFromOs(path);
+                } catch (final IntFileRootHelper.IntWriteException e) {
+                    Log.w(Constants.LOG_TAG,
+                        "unable to protect file from changes by the OS: "
+                            + BRIGHTNESS_PATH, e);
+                }
+            }
+        }
+    }
+
+    /**
      * Exception thrown if setting the brightness of the capacitive buttons
      * backlight fails due to a "dim" brightness being requested (ie. neither
      * "bright" nor "off") and the device does not support that brightness.

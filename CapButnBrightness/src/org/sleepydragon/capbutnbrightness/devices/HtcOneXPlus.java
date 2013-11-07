@@ -73,6 +73,7 @@ public class HtcOneXPlus extends CapacitiveButtonsBacklightBrightness {
                     intFile.write(CURRENTS_PATH, currents);
                 }
             }
+            makeAllFilesReadOnly(intFile);
         } finally {
             intFile.close();
         }

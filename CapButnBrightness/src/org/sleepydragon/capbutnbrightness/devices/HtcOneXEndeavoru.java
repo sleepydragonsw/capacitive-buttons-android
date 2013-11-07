@@ -74,6 +74,7 @@ public class HtcOneXEndeavoru extends CapacitiveButtonsBacklightBrightness {
                     }
                 }
             }
+            makeAllFilesReadOnly(intFile);
         } finally {
             intFile.close();
         }

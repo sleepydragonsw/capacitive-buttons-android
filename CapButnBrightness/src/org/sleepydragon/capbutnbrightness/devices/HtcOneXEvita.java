@@ -46,6 +46,7 @@ public class HtcOneXEvita extends CapacitiveButtonsBacklightBrightness {
                 final int currents = dim ? 1 : 3;
                 intFile.write(CURRENTS_PATH, currents);
             }
+            makeAllFilesReadOnly(intFile);
         } finally {
             intFile.close();
         }

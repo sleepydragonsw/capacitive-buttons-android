@@ -46,6 +46,7 @@ public class HtcOne extends CapacitiveButtonsBacklightBrightness {
                 final int currents = dim ? 3 : 20;
                 intFile.write(CURRENTS_PATH, currents);
             }
+            makeAllFilesReadOnly(intFile);
         } finally {
             intFile.close();
         }

@@ -147,6 +147,40 @@ public class IntFileRootHelper {
     }
 
     /**
+     * Changes the UID and permissions of a file so that the OS cannot change
+     * its value. This method basically does the same thing as
+     * {@link #write(String, int)} without actually writing to the file.
+     *
+     * @param path the path of the file to which to write.
+     * @throws IntWriteException if an error occurs changing the permissions or
+     * UID of the file, such as requesting root permissions or getting the UID
+     * of the file.
+     * @throws NullPointerException if path==null.
+     */
+    public void protectFileFromOs(String path) throws IntWriteException {
+        if (path == null) {
+            throw new NullPointerException("path==null");
+        }
+
+        // verify that the file exists
+        final File file = new File(path);
+        if (!file.exists()) {
+            throw new IntFileNotFoundException("file not found: " + path, path);
+        }
+
+        // ensure that the UID of the file is equal to the UID of the process;
+        // if they are different, then attempt to change the UID of the file
+        final int processUid = Process.myUid();
+        final long fileUid = getFileUID(path);
+        if (processUid != fileUid) {
+            final Shell shell = this.getOrCreateRootShell();
+            setFileUID(path, processUid, shell);
+        }
+
+        makeReadOnly(path);
+    }
+
+    /**
      * Reads the contents of a file as an integer.
      *
      * @param path the path of the file to read.
