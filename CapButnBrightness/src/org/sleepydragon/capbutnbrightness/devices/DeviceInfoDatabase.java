@@ -44,6 +44,7 @@ public class DeviceInfoDatabase {
         list.add(new DeviceInfo("enrc2b", "HTC One X+", new HtcOneXPlus()));
         list.add(new DeviceInfo("m7", "HTC One", new HtcOne()));
         list.add(new DeviceInfo("ville", "HTC One S", new HtcOneXPlus()));
+        list.add(new DeviceInfo("pyramid", "HTC Sensation", new HtcSensation()));
 
         // create a sentinel object that represents an unknown device
         this.unknownDeviceInfo = new UnknownDeviceInfo();
