@@ -10,7 +10,7 @@ public class MainActivity extends FragmentActivity {
     private final Logger mLogger;
 
     public MainActivity() {
-        mLogger = new Logger("MainActivity");
+        mLogger = new Logger(this);
     }
 
     @Override

@@ -11,7 +11,7 @@ public class MyApplication extends Application {
     private final Logger mLogger;
 
     public MyApplication() {
-        mLogger = new Logger("MyApplication");
+        mLogger = new Logger(this);
     }
 
     @Override

@@ -23,6 +23,10 @@ public class Logger {
         mFormatterLock = new ReentrantLock();
     }
 
+    public Logger(@NonNull final Object subTag) {
+        this(subTag.getClass().getSimpleName());
+    }
+
     public void e(@NonNull final String message, Object... args) {
         final String formattedMessage = formatMessage(message, args);
         Log.e(TAG, formattedMessage);
