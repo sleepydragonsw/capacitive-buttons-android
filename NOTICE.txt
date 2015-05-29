@@ -1,0 +1,21 @@
+Some components of this application are not the original works of the author
+of this application.  This file exists to give credit to other places from
+where code, content, assets, and resources were downloaded.
+
+==============================================================================
+1. Material Icons
+
+Some of the PNG images used in the application, such as the off, dim, and
+bright icons used in the main screen, were downloaded from Google's web site
+regarding icons in Material Design:
+
+https://www.google.com/design/icons/index.html
+
+As of May 29, 2015 the URL clearly licenses these icons as follows:
+
+    Feel free to use, remix, and re-share the icons in your products. The icons
+    are available under the CC-BY license. We'd love attribution in your app's
+    "about" screen, but it's not required. The only thing we ask is that you
+    not re-sell the icons.
+
+The "CC-BY license" hyperlinked to: https://creativecommons.org/licenses/by/4.0/

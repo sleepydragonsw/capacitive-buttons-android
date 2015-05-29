@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">Capacitive Buttons</string>
+
+    <string name="reset_to_default_description">Reset to default brightness</string>
+    <string name="brightness_off_description">Off</string>
+    <string name="brightness_dim_description">Dim</string>
+    <string name="brightness_bright_description">Bright</string>
 </resources>

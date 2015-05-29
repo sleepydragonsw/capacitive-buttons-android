@@ -1,11 +1,14 @@
 package org.sleepydragon.capbutnbrightness.ui;
 
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v7.app.AppCompatActivity;
 
+import org.sleepydragon.capbutnbrightness.R;
 import org.sleepydragon.capbutnbrightness.util.Logger;
 
-public class MainActivity extends FragmentActivity {
+public class MainActivity extends AppCompatActivity {
 
     private final Logger mLogger;
 
@@ -17,6 +20,14 @@ public class MainActivity extends FragmentActivity {
     protected void onCreate(final Bundle savedInstanceState) {
         mLogger.d("onCreate()");
         super.onCreate(savedInstanceState);
+
+        setContentView(R.layout.empty_container);
+
+        if (savedInstanceState == null) {
+            final Fragment fragment = new SelectBrightnessFragment();
+            final FragmentManager fm = getSupportFragmentManager();
+            fm.beginTransaction().add(R.id.container, fragment, "MainFragment").commit();
+        }
     }
 
     @Override
