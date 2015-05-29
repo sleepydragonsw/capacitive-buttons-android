@@ -7,7 +7,7 @@
     <ImageView
         android:id="@+id/reset_to_default"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_weight="1"
         android:contentDescription="@string/reset_to_default_description"
         android:src="@drawable/ic_exit_to_app_black_24dp"
@@ -16,7 +16,7 @@
     <ImageView
         android:id="@+id/off"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_weight="2"
         android:contentDescription="@string/brightness_off_description"
         android:src="@drawable/ic_brightness_low_black_24dp"
@@ -25,7 +25,7 @@
     <ImageView
         android:id="@+id/dim"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_weight="2"
         android:contentDescription="@string/brightness_dim_description"
         android:src="@drawable/ic_brightness_medium_black_24dp"
@@ -34,7 +34,7 @@
     <ImageView
         android:id="@+id/bright"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_weight="2"
         android:contentDescription="@string/brightness_bright_description"
         android:src="@drawable/ic_brightness_high_black_24dp"
